@@ -68,7 +68,7 @@ const toggleLoginRegister = () => {
         <ul>
           <li>
             <i class="jober_i1"></i>
-            <strong>发展方向</strong>
+            <strong>招新选题</strong>
             <p>Web前后端，机器学习……</p>
           </li>
           <li>
