@@ -235,7 +235,8 @@ fetch(url, {
       document.getElementById("line").style.backgroundColor = "#00B0FF";
       document.getElementById("TOP").textContent = "TOP10 of Computer System";
       let n = 1;
-      for(n;n<=10;n++){
+      let m = rank_data.cs.how_many;
+      for(n;n<=m;n++){
         document.getElementById("in"+n).children[0].textContent = rank_data.cs.name[n-1];
         document.getElementById("in"+n).children[1].textContent = n.toString();
         document.getElementById("in"+n).children[2].textContent = rank_data.cs.test[n-1];
@@ -249,7 +250,9 @@ fetch(url, {
       document.getElementById("id_card").style.backgroundColor = "#6bb381";
       document.getElementById("line").style.backgroundColor = "#6bb381";
       document.getElementById("TOP").textContent = "TOP10 of Machine Learning";
-      for(n;n<=10;n++){
+      let n = 1;
+      let m = rank_data.ai.how_many;
+      for(n;n<=m;n++){
         document.getElementById("in"+n).children[0].textContent = rank_data.ai.name[n-1];
         document.getElementById("in"+n).children[1].textContent = n.toString();
         document.getElementById("in"+n).children[2].textContent = rank_data.ai.test[n-1];
@@ -263,7 +266,9 @@ fetch(url, {
       document.getElementById("id_card").style.backgroundColor = "#936bb3";
       document.getElementById("line").style.backgroundColor = "#936bb3";
       document.getElementById("TOP").textContent = "TOP10 of Front-end";
-      for(n;n<=10;n++){
+      let n = 1;
+      let m = rank_data.fr.how_many;
+      for(n;n<=m;n++){
         document.getElementById("in"+n).children[0].textContent = rank_data.fr.name[n-1];
         document.getElementById("in"+n).children[1].textContent = n.toString();
         document.getElementById("in"+n).children[2].textContent = rank_data.fr.test[n-1];
@@ -278,7 +283,9 @@ fetch(url, {
       document.getElementById("id_card").style.backgroundColor = "#585858";
       document.getElementById("line").style.backgroundColor = "#585858";
       document.getElementById("TOP").textContent = "TOP10 of Back-end";
-      for(n;n<=10;n++){
+      let n = 1;
+      let m = rank_data.ba.how_many;
+      for(n;n<=10;m++){
         document.getElementById("in"+n).children[0].textContent = rank_data.ba.name[n-1];
         document.getElementById("in"+n).children[1].textContent = n.toString();
         document.getElementById("in"+n).children[2].textContent = rank_data.ba.test[n-1];
