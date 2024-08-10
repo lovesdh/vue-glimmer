@@ -1,5 +1,8 @@
 <template>
-  <div id="wgn"></div>
+    <img src="./img/wgn.jpg" alt="" id="wgn">
+    <img src="./img/talk.png" alt="" id="dialog">
+    <div id="pressure">目前有--位小伙伴和微光娘一起参与了招新活动，要一起加油哟！</div>
+    <h3 id="name_ofv">微光娘</h3>
     <div id="id_card">
         <img src="./img/ShiroiLogo.png" alt="" id="white_logo">
         <div id="name">Competitor</div>
@@ -7,15 +10,15 @@
         <div id="data">
             <div id="place" class="data_elem">
                 <h3 class="title">PLACE</h3>
-                <p style="display: block;text-align: center;font-size: 25px;color: white;font-weight: 400;">12</p>
+                <p style="display: block;text-align: center;font-size: 25px;color: white;font-weight: 400;" id="card_place">12</p>
             </div>
             <div id="tasks" class="data_elem">
                 <h3 class="title">TASKS</h3>
-                <p style="display: block;text-align: center;font-size: 25px;color: white;font-weight: 400;">task6</p>
+                <p style="display: block;text-align: center;font-size: 25px;color: white;font-weight: 400;" id="card_task">task6</p>
             </div>
             <div id="place" class="data_elem">
                 <h3 class="title">POINT</h3>
-                <p style="display: block;text-align: center;font-size: 25px;color: white;font-weight: 400;">1200</p>
+                <p style="display: block;text-align: center;font-size: 25px;color: white;font-weight: 400;" id="card_point">1200</p>
             </div>
         </div>
         <div id="choice">
@@ -42,12 +45,40 @@
     </div>
   </template>
   <style>
+    #pressure{
+      width: 700px;
+      height: 70px;
+      line-height: 70px;
+      text-align: center;
+    position: absolute;
+    top: 120px;
+    left: 690px;
+    color: rgb(0, 0, 0);
+    font-size: 21px;
+    font-family: 微软雅黑;
+    font-weight: bold;
+    /* background-color: #00B0FF; */
+  }
+  #name_ofv{
+    position: absolute;
+    top: 197px;
+    left: 720px;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    font-family: 微软雅黑;
+    font-weight: bold;
+  }
+  #dialog{
+    position: absolute;
+    width: 750px;
+    top: 100px;
+    left: 660px;
+  }
   #wgn{
     position: absolute;
-    right: 30px;
-    top: 350px;
-    width: 300px;
-    height: 400px;
+    left: 1420px;
+    top: 19px;
+    width: 250px;
     background-color: #83f5dc;
   }
   .inner:nth-child(even){
@@ -89,23 +120,23 @@
     position: absolute;
     width: 1000px;
     height: 605px;
-    top: 252px;
-    left: 500px;
+    top: 332px;
+    left:700px;
     /* background-color: aquamarine; */
   }
   #line>h3{
     position: relative;
     bottom: 45px;
-    left: 10px;
+    left: 210px;
     font-size: 40px;
     color: white;
   }
   #line{
     position: absolute;
-    width: 1000px;
+    width: 900px;
     height: 10px;
     left: 500px;
-    top: 245px;
+    top: 325px;
     background-color: #00B0FF;
     line-height: 1;
   }
@@ -178,8 +209,8 @@
     position: absolute;
     width: 500px;
     height: 708px;
-    top: 150px;
-    left: 0px;
+    top: 230px;
+    left: 200px;
     background-color: #00B0FF;
     border-top-right-radius: 30px;
     border-top-left-radius: 30px;
@@ -219,7 +250,19 @@ fetch(url, {
   })
   .then(data => {
     console.log('成功获取的数据:', data);
-    rank_data = data;
+    // rank_data = data;
+    // let n = 1;
+    // let m = rank_data.cs.how_many;
+    // for (n; n <= m; n++) {
+    //   document.getElementById("in" + n).children[0].textContent = rank_data.cs.name[n - 1];
+    //   document.getElementById("in" + n).children[1].textContent = n.toString();
+    //   document.getElementById("in" + n).children[2].textContent = rank_data.cs.test[n - 1];
+    //   document.getElementById("in" + n).children[3].textContent = rank_data.cs.point[n - 1];
+    // }
+    // document.getElementById("card_place") = rank_data.self.place[0];
+    // document.getElementById("card_task") = rank_data.self.test[0];
+    // document.getElementById("card_place") = rank_data.self.point[0];
+    // document.getElementById("pressure").textContent = "目前有" + rank_data.cs.amount + "位小伙伴和微光娘一起参与了计系招新活动，要一起加油哟！"
   })
   .catch(error => {
     console.error('请求失败:', error);
@@ -231,6 +274,7 @@ fetch(url, {
   var i = 1;
   document.getElementById("to_c").onclick = function(){
     if(i != 1){
+      i=1;
       document.getElementById("id_card").style.backgroundColor = "#00B0FF";
       document.getElementById("line").style.backgroundColor = "#00B0FF";
       document.getElementById("TOP").textContent = "TOP10 of Computer System";
@@ -242,11 +286,19 @@ fetch(url, {
         document.getElementById("in"+n).children[2].textContent = rank_data.cs.test[n-1];
         document.getElementById("in"+n).children[3].textContent = rank_data.cs.point[n-1];
       }
-      i=1;
+      // document.getElementById("card_place") = rank_data.self.place[0];
+      // document.getElementById("card_task") = rank_data.self.test[0];
+      // document.getElementById("card_point") = rank_data.self.point[0];
+      if(rank_data.self.place[3]== 1){
+         document.getElementById("pressure").textContent = "目前在计系方向排行第一呢，微光娘好崇拜你呀！"
+      }else{
+            document.getElementById("pressure").textContent = "目前有"+rank_data.cs.amount+"位小伙伴和微光娘一起参与了计系招新活动，要一起加油哟！"
+      }
     }
   } 
   document.getElementById("to_ai").onclick = function(){
     if(i != 2){
+      i=2;
       document.getElementById("id_card").style.backgroundColor = "#6bb381";
       document.getElementById("line").style.backgroundColor = "#6bb381";
       document.getElementById("TOP").textContent = "TOP10 of Machine Learning";
@@ -258,11 +310,19 @@ fetch(url, {
         document.getElementById("in"+n).children[2].textContent = rank_data.ai.test[n-1];
         document.getElementById("in"+n).children[3].textContent = rank_data.ai.point[n-1];
       }
-      i=2;
+      // document.getElementById("card_place") = rank_data.self.place[1];
+      // document.getElementById("card_task") = rank_data.self.test[1];
+      // document.getElementById("card_point") = rank_data.self.point[1];
+      if(rank_data.self.place[3]== 1){
+         document.getElementById("pressure").textContent = "目前在ML方向排行第一呢，微光娘好崇拜你呀！"
+      }else{
+            document.getElementById("pressure").textContent = "目前有"+rank_data.ai.amount+"位小伙伴和微光娘一起参与了ML招新活动，要一起加油哟！"
+      }
     }
   } 
   document.getElementById("to_fr").onclick = function(){
     if(i != 3){
+      i=3;
       document.getElementById("id_card").style.backgroundColor = "#936bb3";
       document.getElementById("line").style.backgroundColor = "#936bb3";
       document.getElementById("TOP").textContent = "TOP10 of Front-end";
@@ -274,12 +334,21 @@ fetch(url, {
         document.getElementById("in"+n).children[2].textContent = rank_data.fr.test[n-1];
         document.getElementById("in"+n).children[3].textContent = rank_data.fr.point[n-1];
       }
-      i=3;
+      // document.getElementById("card_place") = rank_data.self.place[2];
+      // document.getElementById("card_task") = rank_data.self.test[2];
+      // document.getElementById("card_point") = rank_data.self.point[2];
+      if(rank_data.self.place[3]== 1){
+         document.getElementById("pressure").textContent = "目前在前端方向排行第一呢，微光娘好崇拜你呀！"
+      }else{
+            document.getElementById("pressure").textContent = "目前有"+rank_data.fr.amount+"位小伙伴和微光娘一起参与了前端招新活动，要一起加油哟！"
+
+      }
     }
   }
 
   document.getElementById("to_ba").onclick = function(){
     if(i != 4){
+      i=4;
       document.getElementById("id_card").style.backgroundColor = "#585858";
       document.getElementById("line").style.backgroundColor = "#585858";
       document.getElementById("TOP").textContent = "TOP10 of Back-end";
@@ -291,7 +360,15 @@ fetch(url, {
         document.getElementById("in"+n).children[2].textContent = rank_data.ba.test[n-1];
         document.getElementById("in"+n).children[3].textContent = rank_data.ba.point[n-1];
       }
-      i=4;
+      alert(i);
+      // document.getElementById("card_place") = rank_data.self.place[3];
+      // document.getElementById("card_task") = rank_data.self.test[3];
+      // document.getElementById("card_point") = rank_data.self.point[3];
+      if(rank_data.self.place[3]== 1){
+         document.getElementById("pressure").textContent = "目前在后端方向排行第一呢，微光娘好崇拜你呀！"
+      }else{
+         document.getElementById("pressure").textContent = "目前有"+rank_data.ba.amount+"位小伙伴和微光娘一起参与了后端招新活动，要一起加油哟！"
+      }
     }
   }  
 })
