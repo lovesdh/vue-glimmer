@@ -102,7 +102,8 @@
     color: black;
     font-weight: 500px;
     font-size: 22px;
-    line-height: 55px;
+    line-height: 65px;
+    padding-bottom: 65px;
   }
   #in_header{
     background-color: black;
@@ -232,15 +233,14 @@
 
     // 交互拿数据----------------------------------------
     // 交互拿数据----------------------------------------
-    const userId = 'your_user_id_here'; // 替换成实际的用户 ID
-    const url = 'https://example.com/api/endpoint'; // 替换成实际的 API 端点
+    const userId = 'hhh'; // 替换成实际的用户 ID
+    const url = 'https://65804b84.r10.vip.cpolar.cn/rank'; // 替换成实际的 API 端点
     var rank_data;
+    const formData = new FormData();
+formData.append('userId', userId);
 fetch(url, {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({ userId: userId }),
+  body: formData,
 })
   .then(response => {
     if (!response.ok) {
@@ -250,19 +250,20 @@ fetch(url, {
   })
   .then(data => {
     console.log('成功获取的数据:', data);
-    // rank_data = data;
-    // let n = 1;
-    // let m = rank_data.cs.how_many;
-    // for (n; n <= m; n++) {
-    //   document.getElementById("in" + n).children[0].textContent = rank_data.cs.name[n - 1];
-    //   document.getElementById("in" + n).children[1].textContent = n.toString();
-    //   document.getElementById("in" + n).children[2].textContent = rank_data.cs.test[n - 1];
-    //   document.getElementById("in" + n).children[3].textContent = rank_data.cs.point[n - 1];
-    // }
-    // document.getElementById("card_place") = rank_data.self.place[0];
-    // document.getElementById("card_task") = rank_data.self.test[0];
-    // document.getElementById("card_place") = rank_data.self.point[0];
-    // document.getElementById("pressure").textContent = "目前有" + rank_data.cs.amount + "位小伙伴和微光娘一起参与了计系招新活动，要一起加油哟！"
+    rank_data = data;
+    console.log(rank_data);
+    let n = 1;
+    let m = rank_data.data.cs.how_many;
+    for (n; n <= m; n++) {
+      document.getElementById("in" + n).children[0].textContent = rank_data.data.cs.name[n - 1];
+      document.getElementById("in" + n).children[1].textContent = n.toString();
+      document.getElementById("in" + n).children[2].textContent = rank_data.data.cs.test[n - 1];
+      document.getElementById("in" + n).children[3].textContent = rank_data.data.cs.point[n - 1];
+    }
+    document.getElementById("card_place").textContent = rank_data.data.self.place[0];
+    document.getElementById("card_task").textContent = rank_data.data.self.test[0];
+    document.getElementById("card_place").textContent = rank_data.data.self.point[0];
+    document.getElementById("pressure").textContent = "目前有" + rank_data.data.cs.amount + "位小伙伴和微光娘一起参与了计系招新活动，要一起加油哟！"
   })
   .catch(error => {
     console.error('请求失败:', error);
@@ -274,101 +275,101 @@ fetch(url, {
   var i = 1;
   document.getElementById("to_c").onclick = function(){
     if(i != 1){
-      i=1;
       document.getElementById("id_card").style.backgroundColor = "#00B0FF";
       document.getElementById("line").style.backgroundColor = "#00B0FF";
       document.getElementById("TOP").textContent = "TOP10 of Computer System";
       let n = 1;
-      let m = rank_data.cs.how_many;
+      let m = rank_data.data.cs.how_many;
       for(n;n<=m;n++){
-        document.getElementById("in"+n).children[0].textContent = rank_data.cs.name[n-1];
+        document.getElementById("in"+n).children[0].textContent = rank_data.data.cs.name[n-1];
         document.getElementById("in"+n).children[1].textContent = n.toString();
-        document.getElementById("in"+n).children[2].textContent = rank_data.cs.test[n-1];
-        document.getElementById("in"+n).children[3].textContent = rank_data.cs.point[n-1];
+        document.getElementById("in"+n).children[2].textContent = rank_data.data.cs.test[n-1];
+        document.getElementById("in"+n).children[3].textContent = rank_data.data.cs.point[n-1];
       }
-      // document.getElementById("card_place") = rank_data.self.place[0];
-      // document.getElementById("card_task") = rank_data.self.test[0];
-      // document.getElementById("card_point") = rank_data.self.point[0];
-      if(rank_data.self.place[3]== 1){
+      document.getElementById("card_place").textContent = rank_data.data.self.place[0];
+      document.getElementById("card_task").textContent = rank_data.data.self.test[0];
+      document.getElementById("card_point").textContent = rank_data.data.self.point[0];
+      if(rank_data.data.self.place[3]== 1){
          document.getElementById("pressure").textContent = "目前在计系方向排行第一呢，微光娘好崇拜你呀！"
       }else{
-            document.getElementById("pressure").textContent = "目前有"+rank_data.cs.amount+"位小伙伴和微光娘一起参与了计系招新活动，要一起加油哟！"
+            document.getElementById("pressure").textContent = "目前有"+rank_data.data.cs.amount+"位小伙伴和微光娘一起参与了计系招新活动，要一起加油哟！"
       }
+      i=1;
     }
   } 
   document.getElementById("to_ai").onclick = function(){
     if(i != 2){
-      i=2;
       document.getElementById("id_card").style.backgroundColor = "#6bb381";
       document.getElementById("line").style.backgroundColor = "#6bb381";
       document.getElementById("TOP").textContent = "TOP10 of Machine Learning";
       let n = 1;
-      let m = rank_data.ai.how_many;
+      let m = rank_data.data.ai.how_many;
       for(n;n<=m;n++){
-        document.getElementById("in"+n).children[0].textContent = rank_data.ai.name[n-1];
+        document.getElementById("in"+n).children[0].textContent = rank_data.data.ai.name[n-1];
         document.getElementById("in"+n).children[1].textContent = n.toString();
-        document.getElementById("in"+n).children[2].textContent = rank_data.ai.test[n-1];
-        document.getElementById("in"+n).children[3].textContent = rank_data.ai.point[n-1];
+        document.getElementById("in"+n).children[2].textContent = rank_data.data.ai.test[n-1];
+        document.getElementById("in"+n).children[3].textContent = rank_data.data.ai.point[n-1];
       }
-      // document.getElementById("card_place") = rank_data.self.place[1];
-      // document.getElementById("card_task") = rank_data.self.test[1];
-      // document.getElementById("card_point") = rank_data.self.point[1];
-      if(rank_data.self.place[3]== 1){
+      document.getElementById("card_place").textContent = rank_data.data.self.place[1];
+      document.getElementById("card_task").textContent = rank_data.data.self.test[1];
+      document.getElementById("card_point").textContent = rank_data.data.self.point[1];
+      if(rank_data.data.self.place[3]== 1){
          document.getElementById("pressure").textContent = "目前在ML方向排行第一呢，微光娘好崇拜你呀！"
       }else{
-            document.getElementById("pressure").textContent = "目前有"+rank_data.ai.amount+"位小伙伴和微光娘一起参与了ML招新活动，要一起加油哟！"
+            document.getElementById("pressure").textContent = "目前有"+rank_data.data.ai.amount+"位小伙伴和微光娘一起参与了ML招新活动，要一起加油哟！"
       }
+      i=2;
     }
   } 
   document.getElementById("to_fr").onclick = function(){
     if(i != 3){
-      i=3;
       document.getElementById("id_card").style.backgroundColor = "#936bb3";
       document.getElementById("line").style.backgroundColor = "#936bb3";
       document.getElementById("TOP").textContent = "TOP10 of Front-end";
       let n = 1;
-      let m = rank_data.fr.how_many;
+      let m = rank_data.data.fr.how_many;
       for(n;n<=m;n++){
-        document.getElementById("in"+n).children[0].textContent = rank_data.fr.name[n-1];
+        document.getElementById("in"+n).children[0].textContent = rank_data.data.fr.name[n-1];
         document.getElementById("in"+n).children[1].textContent = n.toString();
-        document.getElementById("in"+n).children[2].textContent = rank_data.fr.test[n-1];
-        document.getElementById("in"+n).children[3].textContent = rank_data.fr.point[n-1];
+        document.getElementById("in"+n).children[2].textContent = rank_data.data.fr.test[n-1];
+        document.getElementById("in"+n).children[3].textContent = rank_data.data.fr.point[n-1];
       }
-      // document.getElementById("card_place") = rank_data.self.place[2];
-      // document.getElementById("card_task") = rank_data.self.test[2];
-      // document.getElementById("card_point") = rank_data.self.point[2];
-      if(rank_data.self.place[3]== 1){
+      document.getElementById("card_place").textContent = rank_data.data.self.place[2];
+      document.getElementById("card_task").textContent = rank_data.data.self.test[2];
+      document.getElementById("card_point").textContent = rank_data.data.self.point[2];
+      if(rank_data.data.self.place[3]== 1){
          document.getElementById("pressure").textContent = "目前在前端方向排行第一呢，微光娘好崇拜你呀！"
       }else{
-            document.getElementById("pressure").textContent = "目前有"+rank_data.fr.amount+"位小伙伴和微光娘一起参与了前端招新活动，要一起加油哟！"
+            document.getElementById("pressure").textContent = "目前有"+rank_data.data.fr.amount+"位小伙伴和微光娘一起参与了前端招新活动，要一起加油哟！"
 
       }
+      i=3;
     }
   }
 
   document.getElementById("to_ba").onclick = function(){
     if(i != 4){
-      i=4;
       document.getElementById("id_card").style.backgroundColor = "#585858";
       document.getElementById("line").style.backgroundColor = "#585858";
       document.getElementById("TOP").textContent = "TOP10 of Back-end";
       let n = 1;
-      let m = rank_data.ba.how_many;
+      let m = rank_data.data.ba.how_many;
       for(n;n<=10;m++){
-        document.getElementById("in"+n).children[0].textContent = rank_data.ba.name[n-1];
+        document.getElementById("in"+n).children[0].textContent = rank_data.data.ba.name[n-1];
         document.getElementById("in"+n).children[1].textContent = n.toString();
-        document.getElementById("in"+n).children[2].textContent = rank_data.ba.test[n-1];
-        document.getElementById("in"+n).children[3].textContent = rank_data.ba.point[n-1];
+        document.getElementById("in"+n).children[2].textContent = rank_data.data.ba.test[n-1];
+        document.getElementById("in"+n).children[3].textContent = rank_data.data.ba.point[n-1];
       }
       alert(i);
-      // document.getElementById("card_place") = rank_data.self.place[3];
-      // document.getElementById("card_task") = rank_data.self.test[3];
-      // document.getElementById("card_point") = rank_data.self.point[3];
-      if(rank_data.self.place[3]== 1){
+      document.getElementById("card_place").textContent = rank_data.data.self.place[3];
+      document.getElementById("card_task").textContent = rank_data.data.self.test[3];
+      document.getElementById("card_point").textContent = rank_data.data.self.point[3];
+      if(rank_data.data.self.place[3]== 1){
          document.getElementById("pressure").textContent = "目前在后端方向排行第一呢，微光娘好崇拜你呀！"
       }else{
-         document.getElementById("pressure").textContent = "目前有"+rank_data.ba.amount+"位小伙伴和微光娘一起参与了后端招新活动，要一起加油哟！"
+         document.getElementById("pressure").textContent = "目前有"+rank_data.data.ba.amount+"位小伙伴和微光娘一起参与了后端招新活动，要一起加油哟！"
       }
+      i=4;
     }
   }  
 })
