@@ -1,5 +1,3 @@
-import './assets/main.css'
-
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
@@ -25,8 +23,3 @@ app.mount('#app')
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 
-//测试接口函数
-import { getCategoryAPI } from './apis/testAPI'
-getCategoryAPI().then(res=>{
-    console.log(res);
-})

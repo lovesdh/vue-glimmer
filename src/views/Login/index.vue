@@ -55,6 +55,7 @@ const toggleLoginRegister = () => {
 </script>
 
 <template>
+
   <div class="main">
     <div class="left">
       <div class="logo">
@@ -154,11 +155,7 @@ const toggleLoginRegister = () => {
     * {
         box-sizing: border-box;
     }
-    body {
-        height: 100vh;
-        width: 100vh;
-        background: #4c64ec url(https://img.bosszhipin.com/static/file/2022/zlqc2m9fao1667185843533.png) bottom / 100% auto no-repeat;
-    }
+
     .main {
         position: absolute;
         top: 57%;

@@ -1,11 +1,11 @@
 import http from '@/utils/http'
 
-export const loginAPI = ({ account, password }) => {
+export const githubUrlAPI = ({ url,field,id }) => {
     return http({
-        url: '/login',
+        url: '/problem',
         method: 'POST',
         data: {
-            account, password
+            url,field,id
         }
     })
 }
