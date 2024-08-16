@@ -1,6 +1,6 @@
 import http from '@/utils/http'
 
-export const githubUrlAPI = ({ url,field,id }) => {
+export const uploadLinkAPI = ({ url,field,id }) => {
     return http({
         url: '/problem',
         method: 'POST',

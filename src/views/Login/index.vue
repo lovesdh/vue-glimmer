@@ -46,7 +46,7 @@ const userStore =  useUserStore()
 
 const dologin = ()=>{
     if(checkInputs()){
-        loginAPI({ userName, password })
+        // loginAPI({ userName, password })
         // 1. 提示用户
         ElMessage({ type: 'success', message: '登录成功' })
 

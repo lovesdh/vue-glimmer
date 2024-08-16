@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { reactive  } from 'vue';
 interface User {
   title: string;    // 题目
   submit: string;    // 提交
@@ -45,15 +46,31 @@ const tableData: User[] = [
     score: 80,
   },
 ]
+
+const form = reactive({
+  url: '',
+  field: '',
+  id: ''
+});
+
+const onSubmit = () => {
+  console.log('提交的数据:', form);
+  // 在这里处理表单提交逻辑，例如调用API
+};
 </script>
 
 <template>
-    <el-container id="container">
-      <el-aside >
+  <div class="common-layout">
+    <el-container>
+      <el-aside width="300px">
         <div id="submit-tips">
-          <h2>提交方式：</h2>
-          <br>
+          <strong>提交方式：</strong>
+          <br><br>
           <el-text type="primary">Github仓库地址</el-text>
+          <br>
+          <el-text type="primary">Gitee仓库地址</el-text>
+          <br>
+          <el-text type="primary">其他仓库地址</el-text>
           <br><br>
           <el-text>仓库格式要求：</el-text><br>
           <el-text>一级文件夹命名为你正在进行的学习方向，如：机器学习</el-text><br>
@@ -64,7 +81,7 @@ const tableData: User[] = [
         <div id="contact">
           <el-text type="primary">有任何问题都可以找出题人询问😇</el-text>
         </div>
-        <el-card style="max-width: 460px">
+        <el-card style="max-width: 300px">
           <template #header>加油！心有微光，不惧黑暗！</template>
           <img
             src="../../../src/assets/images/glimmerGirl.jpg"
@@ -73,29 +90,109 @@ const tableData: User[] = [
         </el-card>
       </el-aside>
       <el-container>
-        <el-header>
-          <h1 style="font-size: xx-large;color: skyblue;margin-top: 30px;">微光招新题</h1>
+        <el-header style="padding-top: 20px;">
+          <h1 style="font-size: xx-large;color: skyblue;">微光招新题</h1>
         </el-header>
         <el-main>
-          <el-table
+          <el-scrollbar height="200px" style="float: left;">
+            <el-table
             :data="tableData"
             style="width: 480px"
             :row-class-name="tableRowClassName"
+            class="scores"
           >
             <el-table-column prop="title" label="题目" width="120" />
             <el-table-column prop="submit" label="提交" width="120" />
             <el-table-column prop="review" label="批改" width="120" />
             <el-table-column prop="score" label="分数" width="120" />
           </el-table>
-          <br><br><br><br><br><br>
-          <h2>提交</h2>
+          </el-scrollbar>
+          <el-scrollbar height="200px" style="float: left;">
+            <el-table
+            :data="tableData"
+            style="width: 480px"
+            :row-class-name="tableRowClassName"
+            class="scores"
+          >
+            <el-table-column prop="title" label="题目" width="120" />
+            <el-table-column prop="submit" label="提交" width="120" />
+            <el-table-column prop="review" label="批改" width="120" />
+            <el-table-column prop="score" label="分数" width="120" />
+          </el-table>
+          </el-scrollbar>
+          <el-scrollbar height="200px" style="float: left;">
+            <el-table
+            :data="tableData"
+            style="width: 480px"
+            :row-class-name="tableRowClassName"
+            class="scores"
+          >
+            <el-table-column prop="title" label="题目" width="120" />
+            <el-table-column prop="submit" label="提交" width="120" />
+            <el-table-column prop="review" label="批改" width="120" />
+            <el-table-column prop="score" label="分数" width="120" />
+          </el-table>
+          </el-scrollbar>
+          <el-scrollbar height="200px" style="float: left;">
+            <el-table
+            :data="tableData"
+            style="width: 480px"
+            :row-class-name="tableRowClassName"
+            class="scores"
+          >
+            <el-table-column prop="title" label="题目" width="120" />
+            <el-table-column prop="submit" label="提交" width="120" />
+            <el-table-column prop="review" label="批改" width="120" />
+            <el-table-column prop="score" label="分数" width="120" />
+          </el-table>
+          </el-scrollbar>
+
+          
+
         </el-main>
+        <el-footer>
+          <el-form :model="form" label-width="120px">
+            <!-- URL 输入框 -->
+            <el-form-item label="URL" prop="url">
+              <el-input v-model="form.url" placeholder="请输入你的仓库地址"></el-input>
+            </el-form-item>
+
+            <!-- 字段选择框 -->
+            <el-form-item label="方向" prop="field">
+              <el-select v-model="form.field" placeholder="请选择你的方向">
+                <el-option label="后端-Java" value="java"></el-option>
+                <el-option label="C" value="c"></el-option>
+                <el-option label="前端" value="web"></el-option>
+                <el-option label="ML（机器学习）" value="ml"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <!-- ID 选择框（1 到 20）-->
+            <el-form-item label="ID" prop="id">
+              <el-select v-model="form.id" placeholder="请选择你要提交的题号">
+                <el-option
+                  v-for="num in 20"
+                  :key="num"
+                  :label="num"
+                  :value="num"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <!-- 提交按钮 -->
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit">提交</el-button>
+            </el-form-item>
+          </el-form>
+        </el-footer>
       </el-container>
     </el-container>
+  </div>
+    
 </template>
 
 <style>
-#container{
+.common-layout{
   background-color: azure;
   background-size: cover;
   height: 100%;
@@ -108,7 +205,7 @@ const tableData: User[] = [
 }
 
 #submit-tips{
-  margin: 20% 10% 10% 10%;
+  margin-bottom: 30px;
   padding: 5px;
   border: solid 2px gainsboro;
   border-radius: 4px;
@@ -116,11 +213,29 @@ const tableData: User[] = [
 }
 
 #contact{
-  margin: 10% 10%;
+  margin-bottom: 30px;
   padding: 5px;
   border: solid 2px gainsboro;
   border-radius: 4px;
   background-color: white;
+}
+
+.scores{
+  float: left;
+  margin-left: 100px;
+  margin-top: 30px;
+}
+
+.scrollbar-demo-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  margin: 10px;
+  text-align: center;
+  border-radius: 4px;
+  background: var(--el-color-primary-light-9);
+  color: var(--el-color-primary);
 }
 
 .el-table .warning-row {
@@ -129,4 +244,6 @@ const tableData: User[] = [
 .el-table .success-row {
   --el-table-tr-bg-color: var(--el-color-success-light-9);
 }
+
+
 </style>
