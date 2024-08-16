@@ -1,26 +1,40 @@
 <script setup>
-import { ref } from 'vue';
+import { ref,computed } from 'vue';
 import {useUserStore} from '@/stores/user'
+import { useRouter } from 'vue-router'
+import { getRegisterCodeAPI } from '../../apis/user'
 
 const userName = ref('');
 const password = ref('');
 const student_ID = ref('');
 const name = ref('');
+const phone = ref('');
+const email = ref('');
+const identifyingCode = ref('');
+const isEmailFilled = computed(() => email.value.trim() !== '');
+
+var realRegisterCode = ref('');
+
+const router = useRouter();
 
 const login = ref(true);
 
 const checkInputs = () => {
     if(login.value){
-        if (student_ID.value !== '' && password.value !== '') {
+        if (userName.value !== '' && password.value !== '') {
             return true;
         } else {
-            alert("请输入学号和密码！");
+            alert("请输入用户名和密码！");
             return false;
         }
     }
     else{
-        if (userName.value !== '' && student_ID.value !== '' && name.value !== '' && password.value !== '') {
-            return true;
+        if (userName.value !== '' && student_ID.value !== '' && name.value !== '' && password.value !== '' && phone.value !== '' && email.value !== '') {
+            if(identifyingCode.value == ''){
+                alert("请输入邮箱验证码！");
+            } else{
+                return true;
+            }
         } else {
             alert("请完善个人注册信息！");
             return false;
@@ -32,14 +46,40 @@ const userStore =  useUserStore()
 
 const dologin = ()=>{
     if(checkInputs()){
-        loginAPI({ student_ID, password })
+        loginAPI({ userName, password })
         // 1. 提示用户
         ElMessage({ type: 'success', message: '登录成功' })
 
-        userStore.getUserInfo({ student_ID, password })
+        userStore.getUserInfo({ userName, password })
 
         // 2. 跳转首页
-        router.replace({ path: '/' })
+        router.push('/upload');
+    }
+}
+
+const getRegisterCode = async () => {
+  try {
+    const response = await getRegisterCodeAPI(email.value);
+    console.log('验证码发送成功:', response.data);
+    realRegisterCode.value = response.data.message;
+  } catch (error) {
+    console.error('获取验证码失败:', error);
+  }
+};
+
+const doregister = ()=>{
+    if(checkInputs()){
+        registerAPI({ userName, password,student_ID,name,phone,email })
+        if (realRegisterCode.value == identifyingCode.value) {
+            // 1. 提示用户
+            ElMessage({ type: 'success', message: '注册成功' })
+            userStore.getUserInfo({ userName, password,student_ID,name,phone,email })
+
+            // 2. 跳转首页
+            router.push('/upload');
+        }   else{
+            alert('验证码错误');
+        }
     }
 }
 
@@ -55,65 +95,83 @@ const toggleLoginRegister = () => {
 </script>
 
 <template>
-
-  <div class="main">
+    <div id="background"></div>
+    <div class="main">
     <div class="left">
-      <div class="logo">
+        <div class="logo">
         <div class="logo_img">
-          <img src="/logo1.png" alt="Logo">
+            <img src="/logo1.png" alt="Logo">
         </div>
         <strong>微光</strong>
         <p>心有微光，不惧黑暗</p>
-      </div>
-      <div class="jober active">
+        </div>
+        <div class="jober active">
         <ul>
-          <li>
+            <li>
             <i class="jober_i1"></i>
             <strong>招新选题</strong>
             <p>Web前后端，机器学习……</p>
-          </li>
-          <li>
+            </li>
+            <li>
             <i class="jober_i2"></i>
             <strong>招新范围</strong>
-            <p>大一和大二友友</p>
-          </li>
+            <p>大一友友</p>
+            </li>
         </ul>
-      </div>
+        </div>
     </div>
     <div class="right">
-      <div class="right_main">
+        <div class="right_main">
         <h3 v-if="login" class="title">微光账号登录</h3>
         <h3 v-else class="title">微光账号注册</h3>
-        <div class="input_area">
-            <div v-if="!login" class="user_name">
-                <input v-model="userName" type="text" placeholder="用户名">
+        <div v-if="!login" class="input_area">
+            <div class="registerImformation" style="width: 48%;">
+                <input v-model="name" type="text" placeholder="姓名">
             </div>
-            <div class="student_ID">
+            <div class="registerImformation" style="width: 47.5%;margin-right: 0%">
                 <input v-model="student_ID" type="text" placeholder="学号">
             </div>
-            <div v-if="!login" class="name">
-                <input v-model="name" type="text" placeholder="姓名">
+            <div class="registerImformation" style="width: 100%;">
+                <input v-model="userName" type="text" placeholder="用户名">
+            </div>
+            <div class="registerImformation" style="width: 100%;">
+                <input v-model="password" type="password" placeholder="密码">
+            </div>
+            <div class="registerImformation" style="width: 100%;">
+                <input v-model="phone" type="text" placeholder="手机号">
+            </div>
+            <div class="registerImformation" style="width: 100%;">
+                <input v-model="email" type="text" placeholder="邮箱">
+            </div>
+            <div class="registerImformation" style="width: 67%;margin-bottom: 20px;">
+                <input v-model="identifyingCode" type="text" placeholder="邮箱验证码">
+            </div>
+            <el-button type="primary" id="getCode" :disabled="!isEmailFilled" @click="getRegisterCode">获取验证码</el-button>
+            <div class="input_btn" style="margin-top: 0%;">
+                <button @click="doregister">注册</button>
+            </div>
+        </div>
+        <div v-else class="input_area">
+            <div class="student_ID">
+                <input v-model="userName" type="text" placeholder="用户名">
             </div>
             <div class="password">
                 <input v-model="password" type="password" placeholder="密码">
             </div>
-            <div v-if="login" class="input_btn">
+            <div class="input_btn">
                 <button @click="dologin">登录</button>
-            </div>
-            <div v-else class="input_btn">
-                <button @click="checkInputs">注册</button>
             </div>
         </div>
 
-      </div>
-      <div v-if="login" class="toggleLoginRegister" @click="toggleLoginRegister">
+        </div>
+        <div v-if="login" class="toggleLoginRegister" @click="toggleLoginRegister">
         还没有账号，我想注册
-      </div>
-      <div v-else class="toggleLoginRegister" @click="toggleLoginRegister">
+        </div>
+        <div v-else class="toggleLoginRegister" @click="toggleLoginRegister">
         已有账号，我想登录
-      </div>
+        </div>
     </div>
-  </div>
+    </div>
 </template>
 
 <style>
@@ -154,6 +212,18 @@ const toggleLoginRegister = () => {
     }
     * {
         box-sizing: border-box;
+    }
+
+    #background{
+        background-size: cover;
+        height: 100%;
+        width: 100%;
+        position: page;
+        top:0px;
+        left:0px;
+        right:0px;
+        bottom:0px;
+        background: #4c64ec url(https://img.bosszhipin.com/static/file/2022/zlqc2m9fao1667185843533.png) bottom / 100% auto no-repeat;
     }
 
     .main {
@@ -293,6 +363,39 @@ const toggleLoginRegister = () => {
         box-sizing: border-box;
         border-radius: 8px;
     }
+
+    .registerImformation{
+        margin-top: 20px;
+        margin-right: 15px;
+        position: relative;
+        border: 1px solid #d0d2d9;
+        height: 30px;
+        border-radius: 8px;
+        box-sizing: border-box;
+        transition: all .2s linear;
+        padding: 0 20px;
+        float: left;
+    }
+    .registerImformation:hover {
+        border-color: #2575fc;
+    }
+    .registerImformation input {
+        border: none;
+        outline: none;
+        display: block;
+        width: 100%;
+        font-size: 15px;
+        line-height: 24px;
+        height: 28px;
+        box-sizing: border-box;
+        border-radius: 8px;
+    }
+
+    #getCode{
+        margin-top: 20px;
+        float: left;
+    }
+
     .input_btn {
         margin-top: 30px;
     }
