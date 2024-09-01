@@ -42,43 +42,6 @@ const checkInputs = () => {
 
 const dologin = async () => {
     if (checkInputs()) {
-        // try {
-        //     // const response = await loginAPI({ username, password });
-        //     var myHeaders = new Headers();
-        //     myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
-        //     myHeaders.append("Content-Type", "application/json");
-
-        //     var raw = JSON.stringify({
-        //     "username": "ISEKAI",
-        //     "password": "zk123456"
-        //     });
-
-        //     var requestOptions = {
-        //     method: 'POST',
-        //     headers: myHeaders,
-        //     body: raw,
-        //     redirect: 'follow'
-        //     };
-
-        //     fetch("http://www.glimmer.org.cn:25000/login", requestOptions)
-        //     .then(response => {response.json();
-        //         console.log(response);
-        //         if (response.status === 200) {
-        //             ElMessage({ type: 'success', message: '登录成功' });
-        //             userStore.getUserInfo({ username, password });
-        //             router.push('/upload');
-        //         } else {
-        //             ElMessage({ type: 'error', message: '登录失败，请检查用户名和密码' });
-        //         }
-        //     })
-        //     .then(result => console.log(result))
-        //     .catch(error => console.log('error', error));
-            
-            
-        // } catch (error) {
-        //     ElMessage({ type: 'error', message: '登录请求失败，请稍后再试' });
-        //     console.error('登录请求失败:', error);
-        // }
         var myHeaders = new Headers();
         myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
         myHeaders.append("Content-Type", "application/json");
@@ -100,6 +63,7 @@ const dologin = async () => {
         .then(result => {
             console.log(result);
             if (result.data.status === 1) {
+                localStorage.setItem('token', result.data.message);
                 ElMessage({ type: 'success', message: '登录成功' });
                 router.push('/upload');
             } else {

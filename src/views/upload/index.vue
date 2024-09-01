@@ -2,6 +2,8 @@
 import { reactive,ref  } from 'vue';
 import { useRouter } from 'vue-router'
 
+let token = localStorage.getItem('token');
+
 interface User {
   title: string;    // 题目
   submit: string;    // 提交
