@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive,ref,onMounted,nextTick   } from 'vue';
+import { reactive,ref,nextTick,computed   } from 'vue';
 import { useRouter } from 'vue-router'
 
 let token = localStorage.getItem('token');
@@ -8,8 +8,7 @@ let direct = 1;
 
 const router = useRouter();
 
-
-//获取自己做题情况
+// 获取自己做题情况
 var myHeaders = new Headers();
 myHeaders.append("token", token);
 
@@ -38,9 +37,7 @@ fetch("http://www.glimmer.org.cn:25000/problem", requestOptions)
    })
    .catch(error => console.log('error', error));
 
-
-
-//答题表单
+// 答题表单
 interface User {
   title: number;    // 题目
   score: number;    // 分数
@@ -62,53 +59,57 @@ const tableRowClassName = ({
 const tableData = ref([
   {
     title: 1,
-    score: 0,
+    score: -1,
   },
   {
     title: 2,
-    score: 0,
+    score: -1,
   },
   {
     title: 3,
-    score: 0,
+    score: -1,
   },
   {
     title: 4,
-    score: 0,
+    score: -1,
   },
   {
     title: 5,
-    score: 5,
+    score: -1,
   },
   {
     title: 6,
-    score: 0,
+    score: -1,
   },
   {
     title: 7,
-    score: 0,
+    score: -1,
   },
   {
     title: 8,
-    score: 0,
+    score: -1,
   },
   {
     title: 9,
-    score: 0,
+    score: -1,
   },
   {
     title: 10,
-    score: 0,
+    score: -1,
   },
   {
     title: 11,
-    score: 0,
+    score: -1,
   },
   {
     title: 12,
-    score: 0,
+    score: -1,
   },
 ])
+
+const filteredTableData = computed(() => {
+  return tableData.value.filter(item => item.score !== -1);
+});
 
 const form = reactive({
   url: '',
@@ -121,7 +122,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
 
-//函数   
+// 函数   
 const onSubmit = () => {
   console.log('提交的数据:', form);
   const raw = JSON.stringify(form);
@@ -182,32 +183,42 @@ const ml = ()=>{
 const updateScores = () => {
   if(direct == 1){
       tableData.value = tableData.value.map((item, index) => ({
-      ...item,
-      score: c_scores[index]
-    }));
+        ...item,
+        score: c_scores[index]
+      }));
   } else if(direct == 2){
       tableData.value = tableData.value.map((item, index) => ({
-      ...item,
-      score: web_scores[index]
-    }));
+        ...item,
+        score: web_scores[index]
+      }));
   } else if(direct == 3){
       tableData.value = tableData.value.map((item, index) => ({
-      ...item,
-      score: java_scores[index]
-    }));
+        ...item,
+        score: java_scores[index]
+      }));
   } else if(direct == 4){
       tableData.value = tableData.value.map((item, index) => ({
-      ...item,
-      score: ml_scores[index]
-    }));
+        ...item,
+        score: ml_scores[index]
+      }));
   }
-  
 };
 
 nextTick(() => {
   console.log('DOM updated');
+  fetch("http://www.glimmer.org.cn:25000/problem", requestOptions)
+   .then(response => response.json())
+   .then(result => {
+    console.log(result);
+    data = result.data;
+    c_scores = data['c'];
+    java_scores = data['java'];
+    web_scores = data['web'];
+    ml_scores = data['ml'];
+    updateScores()
+   })
+   .catch(error => console.log('error', error));
 });
-
 </script>
 
 <template>
@@ -272,7 +283,7 @@ nextTick(() => {
           <el-scrollbar max-height="650px" style="float: left;">
             <el-table
             fixed
-            :data="tableData"
+            :data="filteredTableData"
             style="width: 500px"
             :row-class-name="tableRowClassName"
             class="scores"
@@ -297,11 +308,11 @@ nextTick(() => {
               </el-select>
             </el-form-item>
 
-            <!-- ID 选择框（1 到 20）-->
+            <!-- ID 选择框（1 到 12）-->
             <el-form-item label="ID" prop="id">
               <el-select v-model="form.id" placeholder="请选择你要提交的题号">
                 <el-option
-                  v-for="num in 20"
+                  v-for="num in 12"
                   :key="num"
                   :label="num"
                   :value="num"
