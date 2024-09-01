@@ -1,17 +1,14 @@
 <script setup>
 import { ref,computed } from 'vue';
 import { useRouter } from 'vue-router'
-import { getRegisterCodeAPI } from '../../apis/user'
 
 const username = ref('');
 const password = ref('');
 const student_ID = ref('');
 const name = ref('');
 const email = ref('');
-const identifyingCode = ref('');
+const registerCode = ref('');
 const isEmailFilled = computed(() => email.value.trim() !== '');
-
-var realRegisterCode = ref('');
 
 const router = useRouter();
 
@@ -28,7 +25,7 @@ const checkInputs = () => {
     }
     else{
         if (username.value !== '' && student_ID.value !== '' && name.value !== '' && password.value !== '' && email.value !== '') {
-            if(identifyingCode.value == ''){
+            if(registerCode.value == ''){
                 alert("请输入邮箱验证码！");
             } else{
                 return true;
@@ -73,16 +70,16 @@ const dologin = async () => {
     }
 }
 
-const getRegisterCode = async () => {
-    const response = await getRegisterCodeAPI(email.value);
-    console.log(response);
-    realRegisterCode.value = response.data.message;
-};
+// const getRegisterCode = async () => {
+//     const response = await getRegisterCodeAPI(email.value);
+//     console.log(response);
+//     realRegisterCode.value = response.data.message;
+// };
 
 // const doregister = ()=>{
 //     if(checkInputs()){
 //         registerAPI({ username,password,student_ID,name,email })
-//         if (realRegisterCode.value == identifyingCode.value) {
+//         if (realRegisterCode.value == registerCode.value) {
 //             // 1. 提示用户
 //             ElMessage({ type: 'success', message: '注册成功' })
 //             userStore.getUserInfo({ username, password,student_ID,name,email })
@@ -96,6 +93,29 @@ const getRegisterCode = async () => {
 // }
 
 
+// const isRegisterCode = 0;
+
+const sendEmail = ()=>{
+    var myHeaders = new Headers();
+
+    var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+    };
+
+    fetch("http://www.glimmer.org.cn:25000/registercode?email=" + email.value, requestOptions)
+    .then(response => response.json())
+    .then(result => {
+        console.log(result);
+        // if (result.data.message=="已生成验证码"){
+        //     isRegisterCode = 1;
+        //     console.log('baka!');
+        // }
+    })
+    .catch(error => console.log('error', error));
+}
+
 const doregister = ()=>{
     if(checkInputs()){
         var myHeaders = new Headers();
@@ -106,7 +126,8 @@ const doregister = ()=>{
         "password": password.value,
         "email": email.value,
         "name": name.value,
-        "studentid": student_ID.value
+        "studentid": student_ID.value,
+        "registerCode": registerCode.value
         });
 
         var requestOptions = {
@@ -118,9 +139,9 @@ const doregister = ()=>{
 
         fetch("http://www.glimmer.org.cn:25000/signup", requestOptions)
         .then(response => response.json())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-        if (realRegisterCode.value == identifyingCode.value) {
+        .then(result => {
+            console.log(result);
+            if (result.code === 200) {
             // 1. 提示用户
             ElMessage({ type: 'success', message: '注册成功' })
             // userStore.getUserInfo({ username, password,student_ID,name,email })
@@ -130,6 +151,9 @@ const doregister = ()=>{
         }   else{
             alert('验证码错误');
         }
+        })
+        .catch(error => console.log('error', error));
+        
     }
 }
 
@@ -195,9 +219,9 @@ const toggleLoginRegister = () => {
                 <input v-model="email" type="text" placeholder="邮箱">
             </div>
             <div class="registerImformation" style="width: 67%;margin-bottom: 20px;">
-                <input v-model="identifyingCode" type="text" placeholder="邮箱验证码">
+                <input v-model="registerCode" type="text" placeholder="邮箱验证码">
             </div>
-            <el-button type="primary" id="getCode" :disabled="!isEmailFilled" @click="getRegisterCode">获取验证码</el-button>
+            <el-button type="primary" id="getCode" :disabled="!isEmailFilled" @click="sendEmail">获取验证码</el-button>
             <div class="input_btn" style="margin-top: 5px;">
                 <button @click="doregister">注册</button>
             </div>

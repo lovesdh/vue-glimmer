@@ -1,66 +1,10 @@
 <script lang="ts" setup>
-import { reactive,ref  } from 'vue';
+import { reactive,ref,onMounted   } from 'vue';
 import { useRouter } from 'vue-router'
 
 let token = localStorage.getItem('token');
 
-interface User {
-  title: string;    // 题目
-  submit: string;    // 提交
-  review: string;    // 批改
-  score: number;    // 分数
-}
-
-const tableRowClassName = ({
-  row,
-}: {
-  row: User;
-}) => {
-  if (row.review === '批改中') {
-    return 'warning-row'; // 警告行
-  } else if (row.score !== 0) {
-    return 'success-row'; // 成功行
-  }
-  return '';
-}
-
-const tableData: User[] = [
-  {
-    title: '前端T1',
-    submit: '✔️',
-    review: '批改中',
-    score: 90,
-  },
-  {
-    title: '前端T3',
-    submit: '✔️',
-    review: '批改中',
-    score: 0,
-  },
-  {
-    title: '前端T4',
-    submit: '✔️',
-    review: '✔️',
-    score: 80,
-  },
-  {
-    title: '前端T2',
-    submit: '⚪',
-    review: '⚪',
-    score: 0,
-  },
-]
-
-const form = reactive({
-  url: '',
-  field: '',
-  id: ''
-});
-
-const activeIndex = ref('1')
-const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
+let direct = 0;
 
 const router = useRouter();
 
@@ -75,11 +19,106 @@ var requestOptions = {
    redirect: 'follow'
 };
 
+var data;
+var c_scores;
+var java_scores;
+var web_scores;
+var ml_scores;
+
 fetch("http://www.glimmer.org.cn:25000/problem", requestOptions)
    .then(response => response.json())
-   .then(result => console.log(result))
+   .then(result => {
+    console.log(result);
+    data = result.data;
+    c_scores = data['c']
+    java_scores = data['java']
+    web_scores = data['web']
+    ml_scores = data['ml']
+   })
    .catch(error => console.log('error', error));
 
+
+
+//答题表单
+interface User {
+  title: number;    // 题目
+  score: number;    // 分数
+}
+
+const tableRowClassName = ({
+  row,
+}: {
+  row: User;
+}) => {
+  if (row.score === 0) {
+    return 'warning-row'; // 警告行
+  } else if (row.score > 0) {
+    return 'success-row'; // 成功行
+  }
+  return '';
+}
+
+const tableData: User[] = [
+  {
+    title: 1,
+    score: 0,
+  },
+  {
+    title: 2,
+    score: 0,
+  },
+  {
+    title: 3,
+    score: 0,
+  },
+  {
+    title: 4,
+    score: 0,
+  },
+  {
+    title: 5,
+    score: 5,
+  },
+  {
+    title: 6,
+    score: 0,
+  },
+  {
+    title: 7,
+    score: 0,
+  },
+  {
+    title: 8,
+    score: 0,
+  },
+  {
+    title: 9,
+    score: 0,
+  },
+  {
+    title: 10,
+    score: 0,
+  },
+  {
+    title: 11,
+    score: 0,
+  },
+  {
+    title: 12,
+    score: 0,
+  },
+]
+
+const form = reactive({
+  url: '',
+  field: '',
+  id: ''
+});
+
+const activeIndex = ref('1')
+const handleSelect = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+}
 
 //函数   
 const onSubmit = () => {
@@ -113,6 +152,63 @@ const onSubmit = () => {
 const torank = ()=>{
   router.push('/rank');
 }
+
+const logout = ()=>{
+  localStorage.removeItem('token');
+  router.push('/login');
+}
+
+const cs = ()=>{
+  direct = 1;
+  console.log(direct);
+  
+  console.log(tableData);
+}
+
+const frontEnd = ()=>{
+  direct = 2;
+  console.log(direct);
+}
+
+const rearEnd = ()=>{
+  direct = 3;
+  console.log(direct);
+}
+
+const ml = ()=>{
+  direct = 4;
+  console.log(direct);
+}
+
+const updateScores = () => {
+  if(direct == 1){
+    console.log('ok');
+    for(let i=0; i < tableData.length;i++){
+      tableData[i].score = c_scores[i];
+    }
+  } else if(direct == 2){
+    console.log('ok');
+    for(let i=0; i < tableData.length;i++){
+      tableData[i].score = web_scores[i];
+    } 
+  } else if(direct == 3){
+    console.log('ok');
+    for(let i=0; i < tableData.length;i++){
+      tableData[i].score = java_scores[i];
+    } 
+  } else if(direct == 4){
+    console.log('ok');
+    for(let i=0; i < tableData.length;i++){
+      tableData[i].score = ml_scores[i];
+    } 
+  }
+  
+};
+
+onMounted(() => {
+  updateScores();
+});
+
 </script>
 
 <template>
@@ -162,29 +258,28 @@ const torank = ()=>{
               alt="Element logo"
             />
           </el-menu-item>
-          <el-menu-item index="1"><el-button text @click="torank">排行榜</el-button></el-menu-item>
+          <el-menu-item index="1" @click="torank">排行榜</el-menu-item>
           <el-sub-menu index="2">
             <template #title>方向</template>
-            <el-menu-item index="2-1">计算机系统</el-menu-item>
-            <el-menu-item index="2-2">前端</el-menu-item>
-            <el-menu-item index="2-3">后端</el-menu-item>
-            <el-menu-item index="2-4">机器学习</el-menu-item>
+            <el-menu-item index="2-1" @click="cs">计算机系统</el-menu-item>
+            <el-menu-item index="2-2" @click="frontEnd">前端</el-menu-item>
+            <el-menu-item index="2-3" @click="rearEnd">后端</el-menu-item>
+            <el-menu-item index="2-4" @click="ml">机器学习</el-menu-item>
           </el-sub-menu>
-          <el-menu-item index="3">退出登录</el-menu-item>
+          <el-menu-item index="3" @click="logout">退出登录</el-menu-item>
         </el-menu>
         </el-header>
         <el-main>
           <el-scrollbar max-height="650px" style="float: left;">
             <el-table
+            fixed
             :data="tableData"
-            style="width: 480px"
+            style="width: 500px"
             :row-class-name="tableRowClassName"
             class="scores"
           >
-            <el-table-column prop="title" label="题目" width="120" />
-            <el-table-column prop="submit" label="提交" width="120" />
-            <el-table-column prop="review" label="批改" width="120" />
-            <el-table-column prop="score" label="分数" width="120" />
+            <el-table-column prop="title" label="题目" width="250px" />
+            <el-table-column prop="score" label="分数" width="250px" />
           </el-table>
           </el-scrollbar>
           <el-form :model="form" label-width="120px" style="margin-top: 5%;">
