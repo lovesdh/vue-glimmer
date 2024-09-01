@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import {useUserStore} from '@/stores/user'
 
-const userName = ref('');
+const username = ref('');
 const password = ref('');
 const student_ID = ref('');
 const name = ref('');
@@ -19,7 +19,7 @@ const checkInputs = () => {
         }
     }
     else{
-        if (userName.value !== '' && student_ID.value !== '' && name.value !== '' && password.value !== '') {
+        if (username.value !== '' && student_ID.value !== '' && name.value !== '' && password.value !== '') {
             return true;
         } else {
             alert("请完善个人注册信息！");
@@ -51,7 +51,7 @@ const dologin = ()=>{
       <div class="right_main">
         <div class="input_area">
             <div v-if="!login" class="user_name">
-                <input v-model="userName" type="text" placeholder="用户名">
+                <input v-model="username" type="text" placeholder="用户名">
             </div>
             <div class="student_ID">
                 <input v-model="student_ID" type="text" placeholder="学号">

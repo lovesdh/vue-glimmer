@@ -1,14 +1,12 @@
 <script setup>
 import { ref,computed } from 'vue';
-import {useUserStore} from '@/stores/user'
 import { useRouter } from 'vue-router'
 import { getRegisterCodeAPI } from '../../apis/user'
 
-const userName = ref('');
+const username = ref('');
 const password = ref('');
 const student_ID = ref('');
 const name = ref('');
-const phone = ref('');
 const email = ref('');
 const identifyingCode = ref('');
 const isEmailFilled = computed(() => email.value.trim() !== '');
@@ -21,7 +19,7 @@ const login = ref(true);
 
 const checkInputs = () => {
     if(login.value){
-        if (userName.value !== '' && password.value !== '') {
+        if (username.value !== '' && password.value !== '') {
             return true;
         } else {
             alert("请输入用户名和密码！");
@@ -29,7 +27,7 @@ const checkInputs = () => {
         }
     }
     else{
-        if (userName.value !== '' && student_ID.value !== '' && name.value !== '' && password.value !== '' && phone.value !== '' && email.value !== '') {
+        if (username.value !== '' && student_ID.value !== '' && name.value !== '' && password.value !== '' && email.value !== '') {
             if(identifyingCode.value == ''){
                 alert("请输入邮箱验证码！");
             } else{
@@ -42,46 +40,139 @@ const checkInputs = () => {
     }
 };
 
-const userStore =  useUserStore()
+const dologin = async () => {
+    if (checkInputs()) {
+        // try {
+        //     // const response = await loginAPI({ username, password });
+        //     var myHeaders = new Headers();
+        //     myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
+        //     myHeaders.append("Content-Type", "application/json");
 
-const dologin = ()=>{
-    if(checkInputs()){
-        // loginAPI({ userName, password })
-        // 1. 提示用户
-        ElMessage({ type: 'success', message: '登录成功' })
+        //     var raw = JSON.stringify({
+        //     "username": "ISEKAI",
+        //     "password": "zk123456"
+        //     });
 
-        userStore.getUserInfo({ userName, password })
+        //     var requestOptions = {
+        //     method: 'POST',
+        //     headers: myHeaders,
+        //     body: raw,
+        //     redirect: 'follow'
+        //     };
 
-        // 2. 跳转首页
-        router.push('/upload');
+        //     fetch("http://www.glimmer.org.cn:25000/login", requestOptions)
+        //     .then(response => {response.json();
+        //         console.log(response);
+        //         if (response.status === 200) {
+        //             ElMessage({ type: 'success', message: '登录成功' });
+        //             userStore.getUserInfo({ username, password });
+        //             router.push('/upload');
+        //         } else {
+        //             ElMessage({ type: 'error', message: '登录失败，请检查用户名和密码' });
+        //         }
+        //     })
+        //     .then(result => console.log(result))
+        //     .catch(error => console.log('error', error));
+            
+            
+        // } catch (error) {
+        //     ElMessage({ type: 'error', message: '登录请求失败，请稍后再试' });
+        //     console.error('登录请求失败:', error);
+        // }
+        var myHeaders = new Headers();
+        myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        "username": "MISAKA",
+        "password": "123456"
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch("http://www.glimmer.org.cn:25000/login", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result);
+            if (result.data.status === 1) {
+                ElMessage({ type: 'success', message: '登录成功' });
+                router.push('/upload');
+            } else {
+                ElMessage({ type: 'error', message: '登录失败，请检查用户名和密码' });
+            }
+        })
+        .catch(error => console.log('error', error));
     }
 }
 
 const getRegisterCode = async () => {
-  try {
     const response = await getRegisterCodeAPI(email.value);
-    console.log('验证码发送成功:', response.data);
+    console.log(response);
     realRegisterCode.value = response.data.message;
-  } catch (error) {
-    console.error('获取验证码失败:', error);
-  }
 };
+
+// const doregister = ()=>{
+//     if(checkInputs()){
+//         registerAPI({ username,password,student_ID,name,email })
+//         if (realRegisterCode.value == identifyingCode.value) {
+//             // 1. 提示用户
+//             ElMessage({ type: 'success', message: '注册成功' })
+//             userStore.getUserInfo({ username, password,student_ID,name,email })
+
+//             // 2. 跳转首页
+//             router.push('/upload');
+//         }   else{
+//             alert('验证码错误');
+//         }
+//     }
+// }
+
 
 const doregister = ()=>{
     if(checkInputs()){
-        registerAPI({ userName, password,student_ID,name,phone,email })
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        "username": username.value,
+        "password": password.value,
+        "email": email.value,
+        "name": name.value,
+        "studentid": student_ID.value
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch("http://www.glimmer.org.cn:25000/signup", requestOptions)
+        .then(response => response.json())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
         if (realRegisterCode.value == identifyingCode.value) {
             // 1. 提示用户
             ElMessage({ type: 'success', message: '注册成功' })
-            userStore.getUserInfo({ userName, password,student_ID,name,phone,email })
+            // userStore.getUserInfo({ username, password,student_ID,name,email })
 
-            // 2. 跳转首页
-            router.push('/upload');
+            // 2. 重新加载
+            window.location.href = '/login';
         }   else{
             alert('验证码错误');
         }
     }
 }
+
+ 
+
+
 
 const toggleLoginRegister = () => {
     login.value = !login.value;
@@ -132,13 +223,10 @@ const toggleLoginRegister = () => {
                 <input v-model="student_ID" type="text" placeholder="学号">
             </div>
             <div class="registerImformation" style="width: 100%;">
-                <input v-model="userName" type="text" placeholder="用户名">
+                <input v-model="username" type="text" placeholder="用户名">
             </div>
             <div class="registerImformation" style="width: 100%;">
                 <input v-model="password" type="password" placeholder="密码">
-            </div>
-            <div class="registerImformation" style="width: 100%;">
-                <input v-model="phone" type="text" placeholder="手机号">
             </div>
             <div class="registerImformation" style="width: 100%;">
                 <input v-model="email" type="text" placeholder="邮箱">
@@ -147,13 +235,13 @@ const toggleLoginRegister = () => {
                 <input v-model="identifyingCode" type="text" placeholder="邮箱验证码">
             </div>
             <el-button type="primary" id="getCode" :disabled="!isEmailFilled" @click="getRegisterCode">获取验证码</el-button>
-            <div class="input_btn" style="margin-top: 0%;">
+            <div class="input_btn" style="margin-top: 5px;">
                 <button @click="doregister">注册</button>
             </div>
         </div>
         <div v-else class="input_area">
             <div class="student_ID">
-                <input v-model="userName" type="text" placeholder="用户名">
+                <input v-model="username" type="text" placeholder="用户名">
             </div>
             <div class="password">
                 <input v-model="password" type="password" placeholder="密码">
@@ -369,11 +457,11 @@ const toggleLoginRegister = () => {
         margin-right: 15px;
         position: relative;
         border: 1px solid #d0d2d9;
-        height: 30px;
+        height: 43px;
         border-radius: 8px;
         box-sizing: border-box;
         transition: all .2s linear;
-        padding: 0 20px;
+        padding: 6px 20px;
         float: left;
     }
     .registerImformation:hover {
@@ -384,7 +472,7 @@ const toggleLoginRegister = () => {
         outline: none;
         display: block;
         width: 100%;
-        font-size: 15px;
+        font-size: 18px;
         line-height: 24px;
         height: 28px;
         box-sizing: border-box;
@@ -392,7 +480,7 @@ const toggleLoginRegister = () => {
     }
 
     #getCode{
-        margin-top: 20px;
+        margin-top: 25px;
         float: left;
     }
 

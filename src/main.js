@@ -22,4 +22,3 @@ app.mount('#app')
 //注册持久化插件
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
-

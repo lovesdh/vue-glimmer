@@ -1,31 +1,31 @@
 import http from '@/utils/http'
 
-export const loginAPI = ({ userName, password }) => {
+export const loginAPI = ({ username, password }) => {
     return http({
         url: '/login',
         method: 'POST',
         data: {
-            userName, password
+            username, password
         }
     })
 }
 
-export const registerAPI = ({ userName, password,student_ID,name,phone,email }) => {
+export const registerAPI = ({ username, password,student_ID,name,email }) => {
     return http({
         url: '/signup',
         method: 'POST',
         data: {
-            userName, password,student_ID,name,phone,email
+            username, password,student_ID,name,email
         }
     })
 }
 
 export function getRegisterCodeAPI(email) {
     return http({
-      url: '/registercode',
-      method: 'get', 
-      params: {
+        url: '/registercode',
+        method: 'get', 
+        params: {
         email: email 
-      }
+        }
     });
-  }  
+}  

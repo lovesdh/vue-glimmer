@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-import { reactive  } from 'vue';
+import { reactive,ref  } from 'vue';
+import { useRouter } from 'vue-router'
+
 interface User {
   title: string;    // 题目
   submit: string;    // 提交
@@ -28,6 +30,36 @@ const tableData: User[] = [
     score: 90,
   },
   {
+    title: '前端T3',
+    submit: '✔️',
+    review: '批改中',
+    score: 0,
+  },
+  {
+    title: '前端T4',
+    submit: '✔️',
+    review: '✔️',
+    score: 80,
+  },
+  {
+    title: '前端T2',
+    submit: '⚪',
+    review: '⚪',
+    score: 0,
+  },
+  {
+    title: '前端T3',
+    submit: '✔️',
+    review: '批改中',
+    score: 0,
+  },
+  {
+    title: '前端T4',
+    submit: '✔️',
+    review: '✔️',
+    score: 80,
+  },
+  {
     title: '前端T2',
     submit: '⚪',
     review: '⚪',
@@ -53,10 +85,21 @@ const form = reactive({
   id: ''
 });
 
+const activeIndex = ref('1')
+const handleSelect = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+}
+
+const router = useRouter();
+
 const onSubmit = () => {
   console.log('提交的数据:', form);
   // 在这里处理表单提交逻辑，例如调用API
 };
+
+const torank = ()=>{
+  router.push('/rank');
+}
 </script>
 
 <template>
@@ -91,10 +134,34 @@ const onSubmit = () => {
       </el-aside>
       <el-container>
         <el-header style="padding-top: 20px;">
-          <h1 style="font-size: xx-large;color: skyblue;">微光招新题</h1>
+          <el-menu
+          :default-active="activeIndex"
+          class="el-menu-demo"
+          mode="horizontal"
+          :ellipsis="false"
+          @select="handleSelect"
+        >
+          <el-menu-item index="0">
+            <h1 style="font-size: xx-large;color: skyblue;margin-left: 20px;">微光招新题</h1>
+            <img
+              style="width: 100px;margin-left: 30px;"
+              src="../../../public/logo.png"
+              alt="Element logo"
+            />
+          </el-menu-item>
+          <el-menu-item index="1"><el-button text :torank>排行榜</el-button></el-menu-item>
+          <el-sub-menu index="2">
+            <template #title>方向</template>
+            <el-menu-item index="2-1">计算机系统</el-menu-item>
+            <el-menu-item index="2-2">前端</el-menu-item>
+            <el-menu-item index="2-3">后端</el-menu-item>
+            <el-menu-item index="2-4">机器学习</el-menu-item>
+          </el-sub-menu>
+          <el-menu-item index="3">退出登录</el-menu-item>
+        </el-menu>
         </el-header>
         <el-main>
-          <el-scrollbar height="200px" style="float: left;">
+          <el-scrollbar max-height="650px" style="float: left;">
             <el-table
             :data="tableData"
             style="width: 480px"
@@ -107,51 +174,7 @@ const onSubmit = () => {
             <el-table-column prop="score" label="分数" width="120" />
           </el-table>
           </el-scrollbar>
-          <el-scrollbar height="200px" style="float: left;">
-            <el-table
-            :data="tableData"
-            style="width: 480px"
-            :row-class-name="tableRowClassName"
-            class="scores"
-          >
-            <el-table-column prop="title" label="题目" width="120" />
-            <el-table-column prop="submit" label="提交" width="120" />
-            <el-table-column prop="review" label="批改" width="120" />
-            <el-table-column prop="score" label="分数" width="120" />
-          </el-table>
-          </el-scrollbar>
-          <el-scrollbar height="200px" style="float: left;">
-            <el-table
-            :data="tableData"
-            style="width: 480px"
-            :row-class-name="tableRowClassName"
-            class="scores"
-          >
-            <el-table-column prop="title" label="题目" width="120" />
-            <el-table-column prop="submit" label="提交" width="120" />
-            <el-table-column prop="review" label="批改" width="120" />
-            <el-table-column prop="score" label="分数" width="120" />
-          </el-table>
-          </el-scrollbar>
-          <el-scrollbar height="200px" style="float: left;">
-            <el-table
-            :data="tableData"
-            style="width: 480px"
-            :row-class-name="tableRowClassName"
-            class="scores"
-          >
-            <el-table-column prop="title" label="题目" width="120" />
-            <el-table-column prop="submit" label="提交" width="120" />
-            <el-table-column prop="review" label="批改" width="120" />
-            <el-table-column prop="score" label="分数" width="120" />
-          </el-table>
-          </el-scrollbar>
-
-          
-
-        </el-main>
-        <el-footer>
-          <el-form :model="form" label-width="120px">
+          <el-form :model="form" label-width="120px" style="margin-top: 5%;">
             <!-- URL 输入框 -->
             <el-form-item label="URL" prop="url">
               <el-input v-model="form.url" placeholder="请输入你的仓库地址"></el-input>
@@ -184,6 +207,9 @@ const onSubmit = () => {
               <el-button type="primary" @click="onSubmit">提交</el-button>
             </el-form-item>
           </el-form>
+          
+        </el-main>
+        <el-footer>
         </el-footer>
       </el-container>
     </el-container>
@@ -192,6 +218,9 @@ const onSubmit = () => {
 </template>
 
 <style>
+body{
+  overflow-y: hidden;
+}
 .common-layout{
   background-color: azure;
   background-size: cover;
@@ -243,6 +272,10 @@ const onSubmit = () => {
 }
 .el-table .success-row {
   --el-table-tr-bg-color: var(--el-color-success-light-9);
+}
+
+.el-menu--horizontal > .el-menu-item:nth-child(1) {
+  margin-right: auto;
 }
 
 
