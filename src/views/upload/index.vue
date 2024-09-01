@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { reactive,ref,onMounted   } from 'vue';
+import { reactive,ref,onMounted,nextTick   } from 'vue';
 import { useRouter } from 'vue-router'
 
 let token = localStorage.getItem('token');
 
-let direct = 0;
+let direct = 1;
 
 const router = useRouter();
 
@@ -30,10 +30,11 @@ fetch("http://www.glimmer.org.cn:25000/problem", requestOptions)
    .then(result => {
     console.log(result);
     data = result.data;
-    c_scores = data['c']
-    java_scores = data['java']
-    web_scores = data['web']
-    ml_scores = data['ml']
+    c_scores = data['c'];
+    java_scores = data['java'];
+    web_scores = data['web'];
+    ml_scores = data['ml'];
+    updateScores()
    })
    .catch(error => console.log('error', error));
 
@@ -58,7 +59,7 @@ const tableRowClassName = ({
   return '';
 }
 
-const tableData: User[] = [
+const tableData = ref([
   {
     title: 1,
     score: 0,
@@ -107,7 +108,7 @@ const tableData: User[] = [
     title: 12,
     score: 0,
   },
-]
+])
 
 const form = reactive({
   url: '',
@@ -160,53 +161,51 @@ const logout = ()=>{
 
 const cs = ()=>{
   direct = 1;
-  console.log(direct);
-  
-  console.log(tableData);
+  updateScores();
 }
 
 const frontEnd = ()=>{
   direct = 2;
-  console.log(direct);
+  updateScores();
 }
 
 const rearEnd = ()=>{
   direct = 3;
-  console.log(direct);
+  updateScores();
 }
 
 const ml = ()=>{
   direct = 4;
-  console.log(direct);
+  updateScores();
 }
 
 const updateScores = () => {
   if(direct == 1){
-    console.log('ok');
-    for(let i=0; i < tableData.length;i++){
-      tableData[i].score = c_scores[i];
-    }
+      tableData.value = tableData.value.map((item, index) => ({
+      ...item,
+      score: c_scores[index]
+    }));
   } else if(direct == 2){
-    console.log('ok');
-    for(let i=0; i < tableData.length;i++){
-      tableData[i].score = web_scores[i];
-    } 
+      tableData.value = tableData.value.map((item, index) => ({
+      ...item,
+      score: web_scores[index]
+    }));
   } else if(direct == 3){
-    console.log('ok');
-    for(let i=0; i < tableData.length;i++){
-      tableData[i].score = java_scores[i];
-    } 
+      tableData.value = tableData.value.map((item, index) => ({
+      ...item,
+      score: java_scores[index]
+    }));
   } else if(direct == 4){
-    console.log('ok');
-    for(let i=0; i < tableData.length;i++){
-      tableData[i].score = ml_scores[i];
-    } 
+      tableData.value = tableData.value.map((item, index) => ({
+      ...item,
+      score: ml_scores[index]
+    }));
   }
   
 };
 
-onMounted(() => {
-  updateScores();
+nextTick(() => {
+  console.log('DOM updated');
 });
 
 </script>
