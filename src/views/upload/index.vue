@@ -49,36 +49,6 @@ const tableData: User[] = [
     review: '⚪',
     score: 0,
   },
-  {
-    title: '前端T3',
-    submit: '✔️',
-    review: '批改中',
-    score: 0,
-  },
-  {
-    title: '前端T4',
-    submit: '✔️',
-    review: '✔️',
-    score: 80,
-  },
-  {
-    title: '前端T2',
-    submit: '⚪',
-    review: '⚪',
-    score: 0,
-  },
-  {
-    title: '前端T3',
-    submit: '✔️',
-    review: '批改中',
-    score: 0,
-  },
-  {
-    title: '前端T4',
-    submit: '✔️',
-    review: '✔️',
-    score: 80,
-  },
 ]
 
 const form = reactive({
@@ -94,8 +64,28 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 const router = useRouter();
 
+
+//获取自己做题情况
+var myHeaders = new Headers();
+myHeaders.append("token", token);
+
+var requestOptions = {
+   method: 'GET',
+   headers: myHeaders,
+   redirect: 'follow'
+};
+
+fetch("http://www.glimmer.org.cn:25000/problem", requestOptions)
+   .then(response => response.json())
+   .then(result => console.log(result))
+   .catch(error => console.log('error', error));
+
+
+//函数   
 const onSubmit = () => {
   console.log('提交的数据:', form);
+  const raw = JSON.stringify(form);
+
   var myHeaders = new Headers();
   myHeaders.append("token", token);
   myHeaders.append("Content-Type", "application/json");
@@ -103,14 +93,21 @@ const onSubmit = () => {
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
-    body: form,
-    redirect: 'follow'
+    body: raw,
+    redirect: 'follow' // 确保 redirect 是 'follow', 'error', 或 'manual' 之一
   };
 
-  fetch("http://www.glimmer.org.cn:25000/problem",)
-    .then(response => response.text())
+  fetch("http://www.glimmer.org.cn:25000/problem", requestOptions)
+    .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json(); 
+    })
     .then(result => console.log(result))
-    .catch(error => console.log('error', error));
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
 };
 
 const torank = ()=>{
@@ -165,7 +162,7 @@ const torank = ()=>{
               alt="Element logo"
             />
           </el-menu-item>
-          <el-menu-item index="1"><el-button text :torank>排行榜</el-button></el-menu-item>
+          <el-menu-item index="1"><el-button text @click="torank">排行榜</el-button></el-menu-item>
           <el-sub-menu index="2">
             <template #title>方向</template>
             <el-menu-item index="2-1">计算机系统</el-menu-item>

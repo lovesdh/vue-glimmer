@@ -43,12 +43,11 @@ const checkInputs = () => {
 const dologin = async () => {
     if (checkInputs()) {
         var myHeaders = new Headers();
-        myHeaders.append("User-Agent", "Apifox/1.0.0 (https://apifox.com)");
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify({
-        "username": "MISAKA",
-        "password": "123456"
+        "username": username.value,
+        "password": password.value
         });
 
         var requestOptions = {
