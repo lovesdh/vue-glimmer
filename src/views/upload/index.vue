@@ -96,7 +96,21 @@ const router = useRouter();
 
 const onSubmit = () => {
   console.log('提交的数据:', form);
-  // 在这里处理表单提交逻辑，例如调用API
+  var myHeaders = new Headers();
+  myHeaders.append("token", token);
+  myHeaders.append("Content-Type", "application/json");
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: form,
+    redirect: 'follow'
+  };
+
+  fetch("http://www.glimmer.org.cn:25000/problem",)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
 };
 
 const torank = ()=>{
