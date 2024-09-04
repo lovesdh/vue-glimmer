@@ -235,7 +235,7 @@ nextTick(() => {
           <el-text type="primary">其他仓库地址</el-text>
           <br><br>
           <el-text>仓库格式要求：</el-text><br>
-          <el-text>一级文件夹命名为你正在进行的学习方向，如：机器学习</el-text><br>
+          <el-text>一级文件夹命名为你正在进行的学习方向，如：后端</el-text><br>
           <el-text>二级文件夹命名为你正在进行的题目，如：T4</el-text><br>
           <el-text>仓库命名如下形式:</el-text><br>
           <el-text>glimmer-2024090801001-微光娘</el-text><br>
@@ -288,7 +288,7 @@ nextTick(() => {
             :row-class-name="tableRowClassName"
             class="scores"
           >
-            <el-table-column prop="title" label="题目" width="250px" />
+            <el-table-column prop="title" label="已提交题目" width="250px" />
             <el-table-column prop="score" label="分数" width="250px" />
           </el-table>
           </el-scrollbar>
@@ -302,7 +302,7 @@ nextTick(() => {
             <el-form-item label="方向" prop="field">
               <el-select v-model="form.field" placeholder="请选择你的方向">
                 <el-option label="后端-Java" value="java"></el-option>
-                <el-option label="C" value="c"></el-option>
+                <el-option label="计算机系统" value="c"></el-option>
                 <el-option label="前端" value="web"></el-option>
                 <el-option label="ML（机器学习）" value="ml"></el-option>
               </el-select>
@@ -336,9 +336,6 @@ nextTick(() => {
 </template>
 
 <style>
-body{
-  overflow-y: hidden;
-}
 .common-layout{
   background-color: azure;
   background-size: cover;
@@ -349,6 +346,7 @@ body{
   left:0px;
   right:0px;
   bottom:0px;
+  overflow-y: hidden;
 }
 
 #submit-tips{

@@ -1,6 +1,9 @@
 <script setup>
-import { ref,computed } from 'vue';
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
+
+const router = useRouter();
 
 const username = ref('');
 const password = ref('');
@@ -8,26 +11,26 @@ const student_ID = ref('');
 const name = ref('');
 const email = ref('');
 const registerCode = ref('');
+const login = ref(true);
+const inputWidth = ref('67%');
+const isDisabled = ref(false);
+const buttonText = ref('获取验证码');
+
 const isEmailFilled = computed(() => email.value.trim() !== '');
 
-const router = useRouter();
-
-const login = ref(true);
-
 const checkInputs = () => {
-    if(login.value){
-        if (username.value !== '' && password.value !== '') {
+    if (login.value) {
+        if (username.value && password.value) {
             return true;
         } else {
             alert("请输入用户名和密码！");
             return false;
         }
-    }
-    else{
-        if (username.value !== '' && student_ID.value !== '' && name.value !== '' && password.value !== '' && email.value !== '') {
-            if(registerCode.value == ''){
+    } else {
+        if (username.value && student_ID.value && name.value && password.value && email.value) {
+            if (!registerCode.value) {
                 alert("请输入邮箱验证码！");
-            } else{
+            } else {
                 return true;
             }
         } else {
@@ -39,25 +42,13 @@ const checkInputs = () => {
 
 const dologin = async () => {
     if (checkInputs()) {
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-        var raw = JSON.stringify({
-        "username": username.value,
-        "password": password.value
-        });
-
-        var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-        };
-
-        fetch("http://www.glimmer.org.cn:25000/login", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            console.log(result);
+        try {
+            const response = await fetch("http://www.glimmer.org.cn:25000/login", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username.value, password: password.value })
+            });
+            const result = await response.json();
             if (result.data.status === 1) {
                 localStorage.setItem('token', result.data.message);
                 ElMessage({ type: 'success', message: '登录成功' });
@@ -65,101 +56,65 @@ const dologin = async () => {
             } else {
                 ElMessage({ type: 'error', message: '登录失败，请检查用户名和密码' });
             }
-        })
-        .catch(error => console.log('error', error));
-    }
-}
-
-// const getRegisterCode = async () => {
-//     const response = await getRegisterCodeAPI(email.value);
-//     console.log(response);
-//     realRegisterCode.value = response.data.message;
-// };
-
-// const doregister = ()=>{
-//     if(checkInputs()){
-//         registerAPI({ username,password,student_ID,name,email })
-//         if (realRegisterCode.value == registerCode.value) {
-//             // 1. 提示用户
-//             ElMessage({ type: 'success', message: '注册成功' })
-//             userStore.getUserInfo({ username, password,student_ID,name,email })
-
-//             // 2. 跳转首页
-//             router.push('/upload');
-//         }   else{
-//             alert('验证码错误');
-//         }
-//     }
-// }
-
-
-// const isRegisterCode = 0;
-
-const sendEmail = ()=>{
-    var myHeaders = new Headers();
-
-    var requestOptions = {
-    method: 'GET',
-    headers: myHeaders,
-    redirect: 'follow'
-    };
-
-    fetch("http://www.glimmer.org.cn:25000/registercode?email=" + email.value, requestOptions)
-    .then(response => response.json())
-    .then(result => {
-        console.log(result);
-        // if (result.data.message=="已生成验证码"){
-        //     isRegisterCode = 1;
-        //     console.log('baka!');
-        // }
-    })
-    .catch(error => console.log('error', error));
-}
-
-const doregister = ()=>{
-    if(checkInputs()){
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-        var raw = JSON.stringify({
-        "username": username.value,
-        "password": password.value,
-        "email": email.value,
-        "name": name.value,
-        "studentid": student_ID.value,
-        "registerCode": registerCode.value
-        });
-
-        var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-        };
-
-        fetch("http://www.glimmer.org.cn:25000/signup", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            console.log(result);
-            if (result.code === 200) {
-            // 1. 提示用户
-            ElMessage({ type: 'success', message: '注册成功' })
-            // userStore.getUserInfo({ username, password,student_ID,name,email })
-
-            // 2. 重新加载
-            window.location.href = '/login';
-        }   else{
-            alert('验证码错误');
+        } catch (error) {
+            console.error('error', error);
         }
-        })
-        .catch(error => console.log('error', error));
-        
     }
-}
+};
 
- 
+const sendEmail = async () => {
+    try {
+        const response = await fetch(`http://www.glimmer.org.cn:25000/registercode?email=${email.value}`);
+        const result = await response.json();
+        console.log(result);
+        isDisabled.value = true;
+        // 验证码等待
+        let countdown = 60;
+        buttonText.value = `${countdown}秒后可再次发送`;
+        inputWidth.value = '55%';
 
+        const interval = setInterval(() => {
+            countdown--;
+            buttonText.value = `${countdown}秒后可再次发送`;
+            if (countdown <= 0) {
+                clearInterval(interval);
+                inputWidth.value = '67%';
+                isDisabled.value = false;
+                buttonText.value = '获取验证码';
+            }
+        }, 1000);
+    } catch (error) {
+        console.error('error', error);
+    }
+};
 
+const doregister = async () => {
+    if (checkInputs()) {
+        try {
+            const response = await fetch("http://www.glimmer.org.cn:25000/signup", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: username.value,
+                    password: password.value,
+                    email: email.value,
+                    name: name.value,
+                    studentid: student_ID.value,
+                    registerCode: registerCode.value
+                })
+            });
+            const result = await response.json();
+            if (result.code === 200) {
+                ElMessage({ type: 'success', message: '注册成功' });
+                window.location.href = '/login';
+            } else {
+                alert('验证码错误');
+            }
+        } catch (error) {
+            console.error('error', error);
+        }
+    }
+};
 
 const toggleLoginRegister = () => {
     login.value = !login.value;
@@ -169,83 +124,81 @@ const toggleLoginRegister = () => {
         mainElement.style.top = login.value ? '57%' : '50%';
     }
 };
-
 </script>
 
 <template>
     <div id="background"></div>
     <div class="main">
-    <div class="left">
-        <div class="logo">
-        <div class="logo_img">
-            <img src="/logo1.png" alt="Logo">
-        </div>
-        <strong>微光</strong>
-        <p>心有微光，不惧黑暗</p>
-        </div>
-        <div class="jober active">
-        <ul>
-            <li>
-            <i class="jober_i1"></i>
-            <strong>招新选题</strong>
-            <p>Web前后端，机器学习……</p>
-            </li>
-            <li>
-            <i class="jober_i2"></i>
-            <strong>招新范围</strong>
-            <p>大一友友</p>
-            </li>
-        </ul>
-        </div>
-    </div>
-    <div class="right">
-        <div class="right_main">
-        <h3 v-if="login" class="title">微光账号登录</h3>
-        <h3 v-else class="title">微光账号注册</h3>
-        <div v-if="!login" class="input_area">
-            <div class="registerImformation" style="width: 48%;">
-                <input v-model="name" type="text" placeholder="姓名">
+        <div class="left">
+            <div class="logo">
+                <div class="logo_img">
+                    <img src="/logo1.png" alt="Logo">
+                </div>
+                <strong>微光</strong>
+                <p>心有微光，不惧黑暗</p>
             </div>
-            <div class="registerImformation" style="width: 47.5%;margin-right: 0%">
-                <input v-model="student_ID" type="text" placeholder="学号">
-            </div>
-            <div class="registerImformation" style="width: 100%;">
-                <input v-model="username" type="text" placeholder="用户名">
-            </div>
-            <div class="registerImformation" style="width: 100%;">
-                <input v-model="password" type="password" placeholder="密码">
-            </div>
-            <div class="registerImformation" style="width: 100%;">
-                <input v-model="email" type="text" placeholder="邮箱">
-            </div>
-            <div class="registerImformation" style="width: 67%;margin-bottom: 20px;">
-                <input v-model="registerCode" type="text" placeholder="邮箱验证码">
-            </div>
-            <el-button type="primary" id="getCode" :disabled="!isEmailFilled" @click="sendEmail">获取验证码</el-button>
-            <div class="input_btn" style="margin-top: 5px;">
-                <button @click="doregister">注册</button>
+            <div class="jober active">
+                <ul>
+                    <li>
+                        <i class="jober_i1"></i>
+                        <strong>招新选题</strong>
+                        <p>Web前后端，机器学习……</p>
+                    </li>
+                    <li>
+                        <i class="jober_i2"></i>
+                        <strong>招新范围</strong>
+                        <p>大一友友</p>
+                    </li>
+                </ul>
             </div>
         </div>
-        <div v-else class="input_area">
-            <div class="student_ID">
-                <input v-model="username" type="text" placeholder="用户名">
+        <div class="right">
+            <div class="right_main">
+                <h3 v-if="login" class="title">微光账号登录</h3>
+                <h3 v-else class="title">微光账号注册</h3>
+                <div v-if="!login" class="input_area">
+                    <div class="registerImformation" style="width: 48%;">
+                        <input v-model="name" type="text" placeholder="姓名">
+                    </div>
+                    <div class="registerImformation" style="width: 47.5%;margin-right: 0%">
+                        <input v-model="student_ID" type="text" placeholder="学号">
+                    </div>
+                    <div class="registerImformation" style="width: 100%;">
+                        <input v-model="username" type="text" placeholder="用户名">
+                    </div>
+                    <div class="registerImformation" style="width: 100%;">
+                        <input v-model="password" type="password" placeholder="密码">
+                    </div>
+                    <div class="registerImformation" style="width: 100%;">
+                        <input v-model="email" type="text" placeholder="邮箱">
+                    </div>
+                    <div class="registerImformation" id="registerCode" :style="{ width: inputWidth }">
+                        <input v-model="registerCode" type="text" placeholder="邮箱验证码">
+                    </div>
+                    <el-button type="primary" id="getCode" :disabled="isDisabled" @click="sendEmail">{{ buttonText }}</el-button>
+                    <div class="input_btn" style="margin-top: 5px;">
+                        <button @click="doregister">注册</button>
+                    </div>
+                </div>
+                <div v-else class="input_area">
+                    <div class="student_ID">
+                        <input v-model="username" type="text" placeholder="用户名">
+                    </div>
+                    <div class="password">
+                        <input v-model="password" type="password" placeholder="密码">
+                    </div>
+                    <div class="input_btn">
+                        <button @click="dologin">登录</button>
+                    </div>
+                </div>
             </div>
-            <div class="password">
-                <input v-model="password" type="password" placeholder="密码">
+            <div v-if="login" class="toggleLoginRegister" @click="toggleLoginRegister">
+                还没有账号，我想注册
             </div>
-            <div class="input_btn">
-                <button @click="dologin">登录</button>
+            <div v-else class="toggleLoginRegister" @click="toggleLoginRegister">
+                已有账号，我想登录
             </div>
         </div>
-
-        </div>
-        <div v-if="login" class="toggleLoginRegister" @click="toggleLoginRegister">
-        还没有账号，我想注册
-        </div>
-        <div v-else class="toggleLoginRegister" @click="toggleLoginRegister">
-        已有账号，我想登录
-        </div>
-    </div>
     </div>
 </template>
 
@@ -440,7 +393,7 @@ const toggleLoginRegister = () => {
     }
 
     .registerImformation{
-        margin-top: 20px;
+        margin-top: 7px;
         margin-right: 15px;
         position: relative;
         border: 1px solid #d0d2d9;
@@ -466,9 +419,13 @@ const toggleLoginRegister = () => {
         border-radius: 8px;
     }
 
+    .registerImformation {
+        margin-bottom: 20px;
+    }
+
     #getCode{
-        margin-top: 25px;
-        float: left;
+        margin-top: 14px;
+        float: right;
     }
 
     .input_btn {
