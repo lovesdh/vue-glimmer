@@ -91,11 +91,14 @@ const submitScore = (studentid, field, id, score) => {
 
   fetch("http://www.glimmer.org.cn:25000/grade", requestOptions)
     .then(response => response.text())
-    .then(result => console.log(result))
+    .then(result => {
+      console.log(result);
+      // Update the score in the data
+      const student = data.value.find(s => s.studenid === studentid);
+      if (student) {
+        student[field][id].score = parseInt(score);
+      }
+    })
     .catch(error => console.log('error', error));
 };
 </script>
-
-<style>
-/* Add your styles here */
-</style>

@@ -12,11 +12,9 @@ const name = ref('');
 const email = ref('');
 const registerCode = ref('');
 const login = ref(true);
-const inputWidth = ref('67%');
+const registerCodeWidth = ref('67%');
 const isDisabled = ref(false);
 const buttonText = ref('获取验证码');
-
-const isEmailFilled = computed(() => email.value.trim() !== '');
 
 const checkInputs = () => {
     if (login.value) {
@@ -64,25 +62,14 @@ const dologin = async () => {
 
 const sendEmail = async () => {
     try {
+        // 验证码等待
+        startCountdown();
+
         const response = await fetch(`http://www.glimmer.org.cn:25000/registercode?email=${email.value}`);
         const result = await response.json();
         console.log(result);
         isDisabled.value = true;
-        // 验证码等待
-        let countdown = 60;
-        buttonText.value = `${countdown}秒后可再次发送`;
-        inputWidth.value = '55%';
-
-        const interval = setInterval(() => {
-            countdown--;
-            buttonText.value = `${countdown}秒后可再次发送`;
-            if (countdown <= 0) {
-                clearInterval(interval);
-                inputWidth.value = '67%';
-                isDisabled.value = false;
-                buttonText.value = '获取验证码';
-            }
-        }, 1000);
+        
     } catch (error) {
         console.error('error', error);
     }
@@ -124,6 +111,27 @@ const toggleLoginRegister = () => {
         mainElement.style.top = login.value ? '57%' : '50%';
     }
 };
+
+function startCountdown() {
+            registerCodeWidth.value = '55%';
+
+            // 使用 setTimeout 确保 registerCodeWidth.value 的变化后暂停 0.2 秒再进行后续操作
+            setTimeout(() => {
+                let countdown = 60;
+                buttonText.value = `${countdown}秒后可再次发送`;
+
+                const interval = setInterval(() => {
+                    countdown--;
+                    buttonText.value = `${countdown}秒后可再次发送`;
+                    if (countdown <= 0) {
+                        clearInterval(interval);
+                        registerCodeWidth.value = '67%';
+                        isDisabled.value = false;
+                        buttonText.value = '获取验证码';
+                    }
+                }, 1000);
+            }, 200); // 200 毫秒等于 0.2 秒
+        }
 </script>
 
 <template>
@@ -172,7 +180,7 @@ const toggleLoginRegister = () => {
                     <div class="registerImformation" style="width: 100%;">
                         <input v-model="email" type="text" placeholder="邮箱">
                     </div>
-                    <div class="registerImformation" id="registerCode" :style="{ width: inputWidth }">
+                    <div class="registerImformation" id="registerCode" :style="{ width: registerCodeWidth }">
                         <input v-model="registerCode" type="text" placeholder="邮箱验证码">
                     </div>
                     <el-button type="primary" id="getCode" :disabled="isDisabled" @click="sendEmail">{{ buttonText }}</el-button>

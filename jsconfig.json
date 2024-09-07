@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "dev": "vite"
+  },
   "compilerOptions": {
       "baseUrl": "./",
       "paths": {
