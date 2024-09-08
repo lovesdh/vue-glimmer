@@ -123,32 +123,70 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 
 // 函数   
-const onSubmit = () => {
-  console.log('提交的数据:', form);
-  const raw = JSON.stringify(form);
+const onSubmit = async () => {
+  try {
+    console.log('提交的数据:', form);
+    const raw = JSON.stringify(form);
 
-  var myHeaders = new Headers();
-  myHeaders.append("token", token);
-  myHeaders.append("Content-Type", "application/json");
+    var myHeaders = new Headers();
+    myHeaders.append("token", token);
+    myHeaders.append("Content-Type", "application/json");
 
-  var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow' // 确保 redirect 是 'follow', 'error', 或 'manual' 之一
-  };
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
 
-  fetch("http://www.glimmer.org.cn:25000/problem", requestOptions)
-    .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json(); 
-    })
-    .then(result => console.log(result))
-    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-    });
+    // 提交数据
+    const response = await fetch("http://www.glimmer.org.cn:25000/problem", requestOptions);
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+
+    const result = await response.json();
+    console.log(result);
+
+    // 提交成功后更新分数
+    await updateScoresFromServer();
+  } catch (error) {
+    console.error('There was a problem with the fetch operation:', error);
+  }
+};
+
+// 新增函数：从服务器获取并更新分数
+const updateScoresFromServer = async () => {
+  try {
+    var myHeaders = new Headers();
+    myHeaders.append("token", token);
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+
+    const response = await fetch("http://www.glimmer.org.cn:25000/problem", requestOptions);
+    
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+
+    const result = await response.json();
+    console.log(result);
+
+    data = result.data;
+    c_scores = data['c'];
+    java_scores = data['java'];
+    web_scores = data['web'];
+    ml_scores = data['ml'];
+
+    updateScores();
+  } catch (error) {
+    console.error('There was a problem with the fetch operation:', error);
+  }
 };
 
 const torank = ()=>{
@@ -245,10 +283,10 @@ nextTick(() => {
             />
             <h1 class="top-title">微光招新题</h1>
           </el-menu-item>
-          <el-menu-item index="1" @click="torank" class="menu-item">排行榜</el-menu-item>
+          <el-menu-item index="1" @click="torank" class="menu-item" id="toRank">排行榜</el-menu-item>
           <el-sub-menu index="2" class="menu-sub">
             <template #title>
-              <span class="menu-sub-title">方向</span>
+              <span class="menu-sub-title" id="direct">方向</span>
             </template>
             <el-menu-item index="2-1" @click="cs" class="menu-item">计算机系统</el-menu-item>
             <el-menu-item index="2-2" @click="frontEnd" class="menu-item">前端</el-menu-item>
@@ -289,17 +327,18 @@ nextTick(() => {
         <el-main>
           <el-scrollbar max-height="650px" style="float: left;">
             <el-table
-            fixed
-            :data="filteredTableData"
-            style="width: 500px"
-            :row-class-name="tableRowClassName"
-            class="scores"
-          >
-            <el-table-column prop="title" label="已提交题目" width="250px" />
-            <el-table-column prop="score" label="分数" width="250px" />
-          </el-table>
+              fixed
+              :data="filteredTableData"
+              style="width: 500px"
+              :row-class-name="tableRowClassName"
+              class="scores"
+            >
+              <el-table-column prop="title" label="已提交题目" width="250px" />
+              <el-table-column prop="score" label="分数" width="250px" />
+            </el-table>
+
           </el-scrollbar>
-          <el-form :model="form" label-width="120px" style="margin-top: 5%;">
+          <el-form :model="form" label-width="120px" id="upload" >
             <!-- URL 输入框 -->
             <el-form-item label="URL" prop="url">
               <el-input v-model="form.url" placeholder="请输入你的仓库地址"></el-input>
@@ -433,15 +472,15 @@ nextTick(() => {
 .menu-item {
   font-size: 18px;
   font-weight: bold;
-  color: #83bb7a !important;  /* 默认字体颜色为白色 */
-  padding: 10px 20px;         /* 增加内边距 */
+  color: #a2cad7 !important;  
+  padding: 10px 20px;        
   transition: all 0.3s ease;  /* 添加平滑的过渡效果 */
 }
 
 /* 一级菜单项悬停效果 */
 .menu-item:hover {
   background-color: rgba(85, 174, 190, 0.1); /* 轻微的背景色变化 */
-  color: #ffcc00 !important; /* 悬停时字体颜色为金黄色 */
+  color: #00aaff !important; /* 悬停时字体颜色为金黄色 */
   text-shadow: 0 0 10px rgba(255, 204, 0, 0.7); /* 悬停时添加发光效果 */
 }
 
@@ -449,7 +488,7 @@ nextTick(() => {
 .menu-sub-title {
   font-size: 20px;
   font-weight: bold;
-  color: #5bafd2;
+  color: #6fe6b8a3;
 }
 
 
@@ -458,7 +497,7 @@ nextTick(() => {
 .menu-sub .el-menu-item {
   font-size: 16px;
   font-weight: bold;
-  color: #74a7ee !important;  /* 子菜单项默认字体颜色 */
+  color: #3fa9c99b !important;  /* 子菜单项默认字体颜色 */
   padding: 8px 16px;
   transition: background-color 0.3s ease;  /* 平滑背景色变化 */
 }
@@ -468,6 +507,15 @@ nextTick(() => {
   background-color: rgba(0, 0, 0, 0.3);  /* 悬停时子菜单项背景色 */
   color: #ffcc00 !important;  /* 悬停时字体颜色为金黄色 */
 }
+
+#toRank{
+  color: #74f2f2  !important;
+}
+
+#direct{
+  color: #74f2f2  !important;
+}
+
 
 
 body {
@@ -523,6 +571,11 @@ body {
     display: block;
     margin: 0 auto;
     border-radius: 10px;
+  }
+
+
+  #upload{
+    margin-top: 40px;
   }
 
 </style>
