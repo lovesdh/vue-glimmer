@@ -180,6 +180,10 @@ const ml = ()=>{
   updateScores();
 }
 
+const toIndex = ()=>{
+  window.location.href="https://glimmer.org.cn/";
+}
+
 const updateScores = () => {
   if(direct == 1){
       tableData.value = tableData.value.map((item, index) => ({
@@ -224,61 +228,64 @@ nextTick(() => {
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside width="300px">
-        <div id="submit-tips">
-          <strong>提交方式：</strong>
-          <br><br>
-          <el-text type="primary">Github仓库地址</el-text>
-          <br>
-          <el-text type="primary">Gitee仓库地址</el-text>
-          <br>
-          <el-text type="primary">其他仓库地址</el-text>
-          <br><br>
-          <el-text>仓库格式要求：</el-text><br>
-          <el-text>一级文件夹命名为你正在进行的学习方向，如：后端</el-text><br>
-          <el-text>二级文件夹命名为你正在进行的题目，如：T4</el-text><br>
-          <el-text>仓库命名如下形式:</el-text><br>
-          <el-text>glimmer-2024090801001-微光娘</el-text><br>
-        </div>
-        <div id="contact">
-          <el-text type="primary">有任何问题都可以找出题人询问😇</el-text>
-        </div>
-        <el-card style="max-width: 300px">
-          <template #header>加油！心有微光，不惧黑暗！</template>
-          <img
-            src="../../../src/assets/images/glimmerGirl.jpg"
-            style="width: 80%"
-          />
-        </el-card>
-      </el-aside>
-      <el-container>
-        <el-header style="padding-top: 20px;">
-          <el-menu
+      <el-header style="background-image: url('../../../src/assets/images/topBackground.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <el-menu
           :default-active="activeIndex"
           class="el-menu-demo"
           mode="horizontal"
           :ellipsis="false"
           @select="handleSelect"
+          style="background-image: url('../../../src/assets/images/topBackground.png'); background-size: cover; background-position: center; background-repeat: no-repeat;"
         >
-          <el-menu-item index="0">
-            <h1 style="font-size: xx-large;color: skyblue;margin-left: 20px;">微光招新题</h1>
+          <el-menu-item index="0" class="topIndex" @click="toIndex">
             <img
-              style="width: 100px;margin-left: 30px;"
-              src="../../../public/logo.png"
+              style="width: 140px;margin-left: 0px;margin-right: 0%;padding-right: 0%"
+              src="../../../public/logo1.png"
               alt="Element logo"
             />
+            <h1 class="top-title">微光招新题</h1>
           </el-menu-item>
-          <el-menu-item index="1" @click="torank">排行榜</el-menu-item>
-          <el-sub-menu index="2">
-            <template #title>方向</template>
-            <el-menu-item index="2-1" @click="cs">计算机系统</el-menu-item>
-            <el-menu-item index="2-2" @click="frontEnd">前端</el-menu-item>
-            <el-menu-item index="2-3" @click="rearEnd">后端</el-menu-item>
-            <el-menu-item index="2-4" @click="ml">机器学习</el-menu-item>
+          <el-menu-item index="1" @click="torank" class="menu-item">排行榜</el-menu-item>
+          <el-sub-menu index="2" class="menu-sub">
+            <template #title>
+              <span class="menu-sub-title">方向</span>
+            </template>
+            <el-menu-item index="2-1" @click="cs" class="menu-item">计算机系统</el-menu-item>
+            <el-menu-item index="2-2" @click="frontEnd" class="menu-item">前端</el-menu-item>
+            <el-menu-item index="2-3" @click="rearEnd" class="menu-item">后端</el-menu-item>
+            <el-menu-item index="2-4" @click="ml" class="menu-item">机器学习</el-menu-item>
           </el-sub-menu>
-          <el-menu-item index="3" @click="logout">退出登录</el-menu-item>
+          <el-menu-item index="3" @click="logout" class="menu-item">退出登录</el-menu-item>
         </el-menu>
-        </el-header>
+      </el-header>
+      <el-container>
+        <el-aside width="300px" class="el-aside">
+  <div id="submit-tips">
+    <strong>提交方式：</strong>
+    <br><br>
+    <el-text type="primary">Github仓库地址</el-text>
+    <br>
+    <el-text type="primary">Gitee仓库地址</el-text>
+    <br>
+    <el-text type="primary">其他仓库地址</el-text>
+    <br><br>
+    <el-text>仓库格式要求：</el-text><br>
+    <el-text>一级文件夹命名为你正在进行的学习方向，如：后端</el-text><br>
+    <el-text>二级文件夹命名为你正在进行的题目，如：T4</el-text><br>
+    <el-text>仓库命名如下形式:</el-text><br>
+    <el-text>glimmer-2024090801001-微光娘</el-text><br>
+  </div>
+  <div id="contact">
+    <el-text type="primary">有任何问题都可以找出题人询问😇</el-text>
+  </div>
+  <el-card style="max-width: 300px" class="el-card">
+    <template #header>加油捏！<br>心有微光，不惧黑暗！</template>
+    <img
+      src="../../../src/assets/images/glimmerGirl.jpg"
+      style="width: 80%"
+    />
+  </el-card>
+</el-aside>
         <el-main>
           <el-scrollbar max-height="650px" style="float: left;">
             <el-table
@@ -325,14 +332,10 @@ nextTick(() => {
               <el-button type="primary" @click="onSubmit">提交</el-button>
             </el-form-item>
           </el-form>
-          
         </el-main>
-        <el-footer>
-        </el-footer>
       </el-container>
     </el-container>
   </div>
-    
 </template>
 
 <style>
@@ -350,6 +353,7 @@ nextTick(() => {
 }
 
 #submit-tips{
+  margin-top: 10px;
   margin-bottom: 30px;
   padding: 5px;
   border: solid 2px gainsboro;
@@ -364,6 +368,32 @@ nextTick(() => {
   border-radius: 4px;
   background-color: white;
 }
+
+.header{
+  width: 100%;
+  padding: 0%;
+}
+
+.top-title{
+  font-size: xx-large;
+  color: rgb(109, 202, 212);
+  margin-left: 0px;
+  font-family: 'Arial', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  animation: glow 2s ease-in-out infinite alternate; /* 添加发光动画 */
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  to {
+    text-shadow: 0 0 10px #74a7ee, 0 0 20px #74a7ee, 0 0 30px #74a7ee, 0 0 40px #74a7ee, 0 0 50px #74a7ee, 0 0 60px #74a7ee, 0 0 70px #74a7ee;
+  }
+}
+
 
 .scores{
   float: left;
@@ -394,5 +424,105 @@ nextTick(() => {
   margin-right: auto;
 }
 
+/* 禁用 .topIndex 类的 el-menu-item 悬浮时的默认背景样式 */
+.topIndex:hover {
+  background-color: transparent !important;  /* 取消悬浮时的背景变化 */
+}
+
+
+.menu-item {
+  font-size: 18px;
+  font-weight: bold;
+  color: #83bb7a !important;  /* 默认字体颜色为白色 */
+  padding: 10px 20px;         /* 增加内边距 */
+  transition: all 0.3s ease;  /* 添加平滑的过渡效果 */
+}
+
+/* 一级菜单项悬停效果 */
+.menu-item:hover {
+  background-color: rgba(85, 174, 190, 0.1); /* 轻微的背景色变化 */
+  color: #ffcc00 !important; /* 悬停时字体颜色为金黄色 */
+  text-shadow: 0 0 10px rgba(255, 204, 0, 0.7); /* 悬停时添加发光效果 */
+}
+
+/* 子菜单项标题样式 */
+.menu-sub-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #5bafd2;
+}
+
+
+
+/* 子菜单项样式 */
+.menu-sub .el-menu-item {
+  font-size: 16px;
+  font-weight: bold;
+  color: #74a7ee !important;  /* 子菜单项默认字体颜色 */
+  padding: 8px 16px;
+  transition: background-color 0.3s ease;  /* 平滑背景色变化 */
+}
+
+/* 子菜单项悬停效果，确保背景和字体颜色对比度清晰 */
+.menu-sub .el-menu-item:hover {
+  background-color: rgba(0, 0, 0, 0.3);  /* 悬停时子菜单项背景色 */
+  color: #ffcc00 !important;  /* 悬停时字体颜色为金黄色 */
+}
+
+
+body {
+    font-family: 'Roboto', sans-serif;
+  }
+
+  /* 侧边栏样式 */
+  .el-aside {
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  /* 提交提示样式 */
+  #submit-tips {
+    margin-bottom: 20px;
+  }
+
+  #submit-tips strong {
+    font-size: 18px;
+    color: #333;
+  }
+
+  #submit-tips .el-text {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+  }
+
+  /* 联系方式样式 */
+  #contact .el-text {
+    font-size: 16px;
+    color: #007bff;
+  }
+
+  /* 卡片样式 */
+  .el-card {
+    border-radius: 10px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .el-card__header {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    padding: 15px;
+    background-color: #f0f8ff;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .el-card img {
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+  }
 
 </style>

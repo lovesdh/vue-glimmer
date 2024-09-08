@@ -46,6 +46,7 @@
     <div class="inner" id="in10"><p class="inner_name">-</p><p class="inner_rank">-</p><p class="inner_test">-</p><p class="inner_point">-</p></div>
   </div>
 </template>
+
 <style>
 #router{
   position: absolute;
@@ -257,6 +258,7 @@ body{
   }
 
 </style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
