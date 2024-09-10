@@ -298,32 +298,32 @@ nextTick(() => {
       </el-header>
       <el-container>
         <el-aside width="300px" class="el-aside">
-  <div id="submit-tips">
-    <strong>提交方式：</strong>
-    <br><br>
-    <el-text type="primary">Github仓库地址</el-text>
-    <br>
-    <el-text type="primary">Gitee仓库地址</el-text>
-    <br>
-    <el-text type="primary">其他仓库地址</el-text>
-    <br><br>
-    <el-text>仓库格式要求：</el-text><br>
-    <el-text>一级文件夹命名为你正在进行的学习方向，如：后端</el-text><br>
-    <el-text>二级文件夹命名为你正在进行的题目，如：T4</el-text><br>
-    <el-text>仓库命名如下形式:</el-text><br>
-    <el-text>glimmer-2024090801001-微光娘</el-text><br>
-  </div>
-  <div id="contact">
-    <el-text type="primary">有任何问题都可以找出题人询问😇</el-text>
-  </div>
-  <el-card style="max-width: 300px" class="el-card">
-    <template #header>加油捏！<br>心有微光，不惧黑暗！</template>
-    <img
-      src="../../../src/assets/images/glimmerGirl.jpg"
-      style="width: 80%"
-    />
-  </el-card>
-</el-aside>
+          <div id="submit-tips">
+            <strong>提交方式：</strong>
+            <br><br>
+            <el-text type="primary">Github仓库地址</el-text>
+            <br>
+            <el-text type="primary">Gitee仓库地址</el-text>
+            <br>
+            <el-text type="primary">其他仓库地址</el-text>
+            <br><br>
+            <el-text>仓库格式要求：</el-text><br>
+            <el-text>一级文件夹命名为你正在进行的学习方向，如：后端</el-text><br>
+            <el-text>二级文件夹命名为你正在进行的题目，如：T4</el-text><br>
+            <el-text>仓库命名如下形式:</el-text><br>
+            <el-text>glimmer-2024090801001-微光娘</el-text><br>
+          </div>
+          <div id="contact">
+            <el-text type="primary">有任何问题都可以找出题人询问😇</el-text>
+          </div>
+          <el-card style="max-width: 300px" class="el-card">
+            <template #header>加油捏！<br>心有微光，不惧黑暗！</template>
+            <img
+              src="../../../src/assets/images/glimmerGirl.jpg"
+              style="width: 80%"
+            />
+          </el-card>
+        </el-aside>
         <el-main>
           <el-scrollbar max-height="650px" style="float: left;">
             <el-table

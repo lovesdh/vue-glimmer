@@ -1,39 +1,66 @@
 <template>
-    <div id="background"></div>
-    <router-link to="/upload" id="router"><div>个人界面</div></router-link>
-  <img src="./img/wgn.jpg" alt="" id="wgn">
-  <img src="./img/talk.png" alt="" id="dialog">
-  <div id="pressure">目前有--位小伙伴和微光娘一起参与了招新活动，要一起加油哟！</div>
-  <h3 id="name_ofv">微光娘</h3>
+  <!-- <div id="background"></div> -->
+  <img src="./img/Glimmer.png" alt="" id="first_logo">
+  <!-- 新增的页眉元素 -->
+  <header id="header">
+    <a href="https://www.glimmer.org.cn" target="_blank" rel="noopener noreferrer" id="another-link" style="padding-left: 30px; color: #2AA1F2; font-weight: 900;">
+      微光工作室24级招新
+    </a>
+    <nav id="header-nav">
+      <!-- 在这里可以添加其他 router-link 元素 -->
+      <router-link to="/upload" id="header-router">
+        个人界面</router-link>
+      <!-- 根据需要添加更多链接 -->
+    </nav>
+  </header>
+
+
+<!-- 这段有点太尬了所以隐藏了 -->
+ <!-- 这段有点太尬了所以隐藏了 -->
+  <img src="./img/wgn.jpg" alt="" id="wgn" style="display: none;">
+  <img src="./img/talk.png" alt="" id="dialog" style="display: none;">
+  <div id="pressure" style="display: none;">目前有--位小伙伴和微光娘一起参与了招新活动，要一起加油哟！</div>
+  <h3 id="name_ofv" style="display: none;">微光娘</h3>
+  <!-- 这段有点太尬了所以隐藏了 -->
+   <!-- 这段有点太尬了所以隐藏了 -->
+
+
   <div id="id_card">
-      <img src="./img/ShiroiLogo.png" alt="" id="white_logo">
-      <div id="name">Competitor</div>
-      
-      <div id="data">
-          <div id="place" class="data_elem">
-              <h3 class="title">PLACE</h3>
-              <p style="display: block;text-align: center;font-size: 25px;color: white;font-weight: 400;" id="card_place">12</p>
-          </div>
-          <div id="tasks" class="data_elem">
-              <h3 class="title">TASKS</h3>
-              <p style="display: block;text-align: center;font-size: 25px;color: white;font-weight: 400;" id="card_task">task6</p>
-          </div>
-          <div id="place" class="data_elem">
-              <h3 class="title">POINT</h3>
-              <p style="display: block;text-align: center;font-size: 25px;color: white;font-weight: 400;" id="card_point">1200</p>
-          </div>
+    <img src="./img/ShiroiLogo.png" alt="" id="white_logo">
+    <div id="name">Competitor</div>
+    <div id="data">
+      <div id="place" class="data_elem">
+        <h3 class="title">PLACE</h3>
+        <p style="display: block;text-align: center;font-size: 25px;color: white;font-weight: 400;" id="card_place">12</p>
       </div>
-      <div id="choice">
-        <div id="to_c" class="change_to">计系</div>
-        <div id="to_ai" class="change_to">ML</div>
-        <div id="to_fr" class="change_to">前端</div>
-        <div id="to_ba" class="change_to">后端</div>
+      <div id="tasks" class="data_elem">
+        <h3 class="title">TASKS</h3>
+        <p style="display: block;text-align: center;font-size: 25px;color: white;font-weight: 400;" id="card_task">task6</p>
       </div>
-      <img src="./img/decoration.png" alt="" id="decoration">
+      <div id="place" class="data_elem">
+        <h3 class="title">POINT</h3>
+        <p style="display: block;text-align: center;font-size: 25px;color: white;font-weight: 400;" id="card_point">1200</p>
+      </div>
+    </div>
+    <div id="choice">
+      <div id="to_c" class="change_to">计系</div>
+      <div id="to_ai" class="change_to">ML</div>
+      <div id="to_fr" class="change_to">前端</div>
+      <div id="to_ba" class="change_to">后端</div>
+    </div>
+    <img src="./img/decoration.png" alt="" id="decoration">
   </div>
-  <div id="line"><h3 id="TOP">TOP10 of Computer System</h3></div>
+  <div id="line">
+    <h3 id="TOP">TOP10 of Computer System</h3>
+  </div>
   <div id="rank_area">
-    <div class="inner" id="in_header"><p class="inner_name">ID</p><p class="inner_rank">PLACE</p><p class="inner_test">TASK</p><p class="inner_point">POINT</p></div>
+    <div class="inner" id="in_header">
+      <p class="inner_name">ID</p>
+      <p class="inner_rank">PLACE</p>
+      <p class="inner_test">TASK</p>
+      <p class="inner_point">POINT</p>
+    </div>
+    <!-- 其余内容保持不变 -->
     <div class="inner" id="in1"><p class="inner_name">-</p><p class="inner_rank">-</p><p class="inner_test">-</p><p class="inner_point">-</p></div>
     <div class="inner" id="in2"><p class="inner_name">-</p><p class="inner_rank">-</p><p class="inner_test">-</p><p class="inner_point">-</p></div>
     <div class="inner" id="in3"><p class="inner_name">-</p><p class="inner_rank">-</p><p class="inner_test">-</p><p class="inner_point">-</p></div>
@@ -46,282 +73,300 @@
     <div class="inner" id="in10"><p class="inner_name">-</p><p class="inner_rank">-</p><p class="inner_test">-</p><p class="inner_point">-</p></div>
   </div>
 </template>
-
 <style>
-#router{
+#first_logo{
   position: absolute;
-  width: 10%;
-  height: 1.3%;
+  width: 30px;
+  top: 5px;
+  left: 10px;
+}
+body{
+  background-color: #F0FFFF;
+}
+body {
+  background-color: #F0FFFF;
+}
+
+#header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 4.5%;
+  align-items: center;
+  padding: 9px 18px;
+  background-color: #333;
+  color: white;
+  z-index: 10;
+}
+
+#header-router {
+  font-size: 16.2px;
+  color: white;
+  text-decoration: none;
+}
+
+#header-nav {
+  display: flex;
+  gap: 9px;
+}
+
+#header-nav a {
+  color: white;
+  text-decoration: none;
+}
+
+#header-nav a:hover {
+  text-decoration: underline;
+}
+
+#router {
+  position: absolute;
+  width: 9%;
+  height: 1.17%;
   background-color: rgb(155, 155, 155);
-  left: 5%;
-  top: 5%;
-  font-size: 30px;
+  left: 4.5%;
+  top: 4.5%;
+  font-size: 27px;
   font-family: 微软雅黑;
   line-height: 0%;
 }
-body{
+
+body {
   background-image: src;
 }
-  #pressure{
-    width: 700px;
-    height: 70px;
-    line-height: 70px;
-    text-align: center;
+
+#pressure {
+  width: 630px;
+  height: 63px;
+  line-height: 63px;
+  text-align: center;
   position: absolute;
-  top: 120px;
-  left: 790px;
+  top: 108px;
+  left: 711px;
   color: rgb(0, 0, 0);
-  font-size: 21px;
+  font-size: 18.9px;
   font-family: 微软雅黑;
   font-weight: bold;
-  /* background-color: #00B0FF; */
 }
-#name_ofv{
+
+#name_ofv {
   position: absolute;
-  top: 197px;
-  left: 820px;
+  top: 177px;
+  left: 738px;
   color: rgb(255, 255, 255);
-  font-size: 20px;
+  font-size: 18px;
   font-family: 微软雅黑;
   font-weight: bold;
 }
-#dialog{
+
+#dialog {
   position: absolute;
-  width: 750px;
-  top: 100px;
-  left: 760px;
+  width: 675px;
+  top: 90px;
+  left: 684px;
 }
-#wgn{
+
+#wgn {
   position: absolute;
-  left: 1520px;
-  top: 19px;
-  width: 250px;
+  left: 1368px;
+  top: 17px;
+  width: 225px;
   background-color: #83f5dc;
 }
-.inner:nth-child(even){
+
+.inner:nth-child(even) {
   background-color: #FFFFFF;
 }
-.inner:nth-child(odd){
+
+.inner:nth-child(odd) {
   background-color: #F3F3F3;
 }
-.inner:hover{
+
+.inner:hover {
   background-color: #BD94FF;
 }
-.inner{
-  width: 1000px;
-  height: 55px;
+
+.inner {
+  width: 900px;
+  height: 49.5px;
 }
-.inner>p{
+
+.inner > p {
   display: inline-block;
-  width: 250px;
-  height: 55px;
+  width: 225px;
+  height: 49.5px;
   text-align: center;
   color: black;
-  font-weight: 500px;
-  font-size: 22px;
-  line-height: 65px;
-  padding-bottom: 65px;
+  font-weight: 450px;
+  font-size: 19.8px;
+  line-height: 58.5px;
+  padding-bottom: 58.5px;
 }
-#in_header{
+
+#in_header {
   background-color: black;
 }
-#in_header>p{
+
+#in_header > p {
   color: white;
 }
-.title{
+
+.title {
   text-align: center;
   display: block;
   user-select: none;
   color: rgb(36, 36, 36);
 }
-#rank_area{
-  position: absolute;
-  width: 1000px;
-  height: 605px;
-  top: 332px;
-  left:800px;
-  /* background-color: aquamarine; */
-}
-#line>h3{
-  position: relative;
-  bottom: 45px;
-  left: 210px;
-  font-size: 40px;
-  color: white;
-}
-#line{
+
+#rank_area {
   position: absolute;
   width: 900px;
-  height: 10px;
-  left: 600px;
-  top: 325px;
+  height: 544.5px;
+  top: 239px;
+  left: 720px;
+}
+
+#line > h3 {
+  position: relative;
+  bottom: 40.5px;
+  left: 189px;
+  font-size: 36px;
+  color: rgb(0, 0, 0);
+}
+
+#line {
+  position: absolute;
+  width: 810px;
+  height: 9px;
+  left: 540px;
+  top: 233px;
   background-color: #00B0FF;
   line-height: 1;
 }
-#to_c{
+
+#to_c {
   background-color: #ffffff;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  border-top-left-radius: 18px;
+  border-bottom-left-radius: 18px;
 }
-#to_ai{
+
+#to_ai {
   background-color: #dadada;
 }
-#to_fr{
+
+#to_fr {
   background-color: #b8b8b8;
 }
-#to_ba{
+
+#to_ba {
   background-color: #919191;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-top-right-radius: 18px;
+  border-bottom-right-radius: 18px;
 }
-.change_to{
-  width: 90px;
-  height: 30px;
+
+.change_to {
+  width: 81px;
+  height: 27px;
   display: inline-block;
   text-align: center;
-  font-size: 17px;
-  padding-top: 3px;
+  font-size: 15.3px;
+  padding-top: 2.7px;
   color: black;
-  font-weight: 100px;
+  font-weight: 90px;
   font-family: 微软雅黑;
   cursor: pointer;
+  user-select: none;
 }
-#choice{
+
+#choice {
   display: block;
-  width: 360px;
-  height: 30px;
-  /* background-color: aquamarine; */
+  width: 324px;
+  height: 27px;
   margin: auto;
-  margin-top: 40px;
-  border-radius: 20px;
+  margin-top: 36px;
+  border-radius: 18px;
 }
-#decoration{
+
+#decoration {
   position: relative;
-  left: 75%;
-  top: 5%;
-  width: 20%;
+  left: 67.5%;
+  top: 4.5%;
+  width: 18%;
 }
-.data_elem{
-  width: 130px;
-  height: 100px;
-  /* background-color: bisque; */
-  margin-left: 18.33px;
-  margin-right: 18.33px;
+
+.data_elem {
+  width: 117px;
+  height: 90px;
+  margin-left: 16.5px;
+  margin-right: 16.5px;
   display: inline-block;
 }
-#data{
-  margin-top: 75px;
-  width:500px;
-  height: 100px;
-  /* background-color: aliceblue; */
+
+#data {
+  margin-top: 67.5px;
+  width: 450px;
+  height: 90px;
 }
-#name{
+
+#name {
   text-align: center;
   color: white;
-  font-weight: 500;
-  font-size: 40px;
-  margin-top: 40px;
-  user-select: none
+  font-weight: 450;
+  font-size: 36px;
+  margin-top: 36px;
+  user-select: none;
 }
-#id_card{
+
+#id_card {
   position: absolute;
-  width: 500px;
-  height: 708px;
-  top: 230px;
-  left: 300px;
+  width: 450px;
+  height: 637.2px;
+  top: 147px;
+  left: 270px;
   background-color: #00B0FF;
-  border-top-right-radius: 30px;
-  border-top-left-radius: 30px;
+  border-top-right-radius: 27px;
+  border-top-left-radius: 27px;
   border-color: white;
   border-style: solid;
-  border-width: 5px;
+  border-width: 4.5px;
   box-sizing: border-box;
   z-index: 1;
 }
-#white_logo{
-  width: 200px;
+
+#white_logo {
+  width: 180px;
   margin: auto;
   display: block;
-  padding-top: 45px;
+  padding-top: 40.5px;
 }
 
-#background{
-      background-size: cover;
-      height: 100%;
-      width: 100%;
-      position: page;
-      top:0px;
-      left:0px;
-      right:0px;
-      bottom:0px;
-      background: #4c64ec url(https://img.bosszhipin.com/static/file/2022/zlqc2m9fao1667185843533.png) bottom / 100% auto no-repeat;
-  }
+#background {
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background: #4c64ec url(https://img.bosszhipin.com/static/file/2022/zlqc2m9fao1667185843533.png) bottom / 100% auto no-repeat;
+}
 
 </style>
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-
   // 交互拿数据----------------------------------------
   // 交互拿数据----------------------------------------
-  const userId = 'hhh'; // 替换成实际的用户 ID
-  let token = localStorage.getItem('token');
-  const url = 'http://www.glimmer.org.cn:25000/rank'; // 替换成实际的 API 端点
-  var rank_data;
-  const formData = new FormData();
-formData.append('userId', userId);
-fetch(url, {
-method: 'POST',
-body: formData,
-headers:{
-  'token':token
-}
-})
-.then(response => {
-  if (!response.ok) {
-    throw new Error('网络响应不是 OK');
-  }
-  return response.json();
-})
-.then(data => {
-  console.log('成功获取的数据:', data);
-  rank_data = data;
-  console.log(rank_data);
-  let n = 1;
-  let m = rank_data.data.cs.how_many;
-  for (n; n <= m; n++) {
-    document.getElementById("in" + n).children[0].textContent = rank_data.data.cs.name[n - 1];
-    document.getElementById("in" + n).children[1].textContent = n.toString();
-    if(rank_data.data.self.place[3]== 1){
-       document.getElementById("pressure").textContent = "目前在计系方向排行第一呢，微光娘好崇拜你呀！"
-    }else{
-          document.getElementById("pressure").textContent = "目前有"+rank_data.data.cs.amount+"位小伙伴和微光娘一起参与了招新活动，要一起加油哟！"
-    }
-    document.getElementById("in" + n).children[3].textContent = rank_data.data.cs.point[n - 1];
-  }
-  document.getElementById("name").textContent = rank_data.data.self.name;
-  document.getElementById("card_place").textContent = rank_data.data.self.place[0];
-  if (rank_data.data.self.test[0] == -1){
-      document.getElementById("card_task").textContent = "未完成"
-      }else{
-        document.getElementById("card_task").textContent = rank_data.data.self.test[0];
-      }
+  export default {
+  data() {
+    return {
+      rank_data: null,
+    };
+  },
+  mounted() {
+    // 组件挂载后执行的代码
+    this.fetchData()
 
-  if(rank_data.data.self.place[0]== 1){
-       document.getElementById("pressure").textContent = "目前在计系方向排行第一呢，微光娘好崇拜你呀！"
-    }else{
-          document.getElementById("pressure").textContent = "目前有"+rank_data.data.cs.amount+"位小伙伴和微光娘一起参与了招新活动，要一起加油哟！"
-    }
-  document.getElementById("card_point").textContent = rank_data.data.self.point[0];
-  document.getElementById("pressure").textContent = "目前有" + rank_data.data.cs.amount + "位小伙伴和微光娘一起参与了招新活动，要一起加油哟！"
-})
-.catch(error => {
-  console.error('请求失败:', error);
-});
-// 交互拿数据----------------------------------------
-// 交互拿数据----------------------------------------
-
-
+    // document.addEventListener('DOMContentLoaded', function() {
 var i = 1;
 document.getElementById("to_c").onclick = function(){
   if(i != 1){
@@ -453,8 +498,66 @@ document.getElementById("to_ba").onclick = function(){
     }
   }
 }  
-})
 
+// })
+  },
+  methods: {
+    fetchData() {
+      const userId = 'hhh'; // 替换成实际的用户 ID
+      const token = localStorage.getItem('token');
+      const url = 'http://www.glimmer.org.cn:25000/rank'; // 替换成实际的 API 端点
+
+      const formData = new FormData();
+      formData.append('userId', userId);
+
+      fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'token': token
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('网络响应不是 OK');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('成功获取的数据:', data);
+        window.rank_data = data;
+        this.rank_data = data;
+        this.updateDOM();
+      })
+      .catch(error => {
+        console.error('请求失败:', error);
+      });
+    },
+    updateDOM() {
+      if (!this.rank_data) return;
+
+      let n = 1;
+      let m = this.rank_data.data.cs.how_many;
+      for (n; n <= m; n++) {
+        document.getElementById("in" + n).children[0].textContent = this.rank_data.data.cs.name[n - 1];
+        document.getElementById("in" + n).children[1].textContent = n.toString();
+        if (this.rank_data.data.self.place[3] == 1) {
+          document.getElementById("pressure").textContent = "目前在计系方向排行第一呢，微光娘好崇拜你呀！";
+        } else {
+          document.getElementById("pressure").textContent = "目前有" + this.rank_data.data.cs.amount + "位小伙伴和微光娘一起参与了招新活动，要一起加油哟！";
+        }
+        document.getElementById("in" + n).children[3].textContent = this.rank_data.data.cs.point[n - 1];
+      }
+      document.getElementById("name").textContent = this.rank_data.data.self.name;
+      document.getElementById("card_place").textContent = this.rank_data.data.self.place[0];
+      document.getElementById("card_task").textContent = this.rank_data.data.self.test[0] == -1 ? "未完成" : this.rank_data.data.self.test[0];
+      document.getElementById("card_point").textContent = this.rank_data.data.self.point[0];
+      document.getElementById("pressure").textContent = "目前有" + this.rank_data.data.cs.amount + "位小伙伴和微光娘一起参与了招新活动，要一起加油哟！";
+    }
+  }
+};
+// 交互拿数据----------------------------------------
+// 交互拿数据----------------------------------------
 
 
 </script>
