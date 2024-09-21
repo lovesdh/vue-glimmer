@@ -3,7 +3,7 @@
   <img src="./img/Glimmer.png" alt="" id="first_logo">
   <!-- 新增的页眉元素 -->
   <header id="header">
-    <a href="https://www.glimmer.org.cn" target="_blank" rel="noopener noreferrer" id="another-link" style="padding-left: 30px; color: #2AA1F2; font-weight: 900;">
+    <a href="http://www.glimmer.org.cn" target="_blank" rel="noopener noreferrer" id="another-link" style="padding-left: 30px; color: #2AA1F2; font-weight: 900;">
       微光工作室24级招新
     </a>
     <nav id="header-nav">
@@ -505,7 +505,7 @@ document.getElementById("to_ba").onclick = function(){
     fetchData() {
       const userId = 'hhh'; // 替换成实际的用户 ID
       const token = localStorage.getItem('token');
-      const url = 'http://www.glimmer.org.cn:25000/rank'; // 替换成实际的 API 端点
+      const url = 'http://www.glimmer.org.cn:24999/rank'; // 替换成实际的 API 端点
 
       const formData = new FormData();
       formData.append('userId', userId);

@@ -8,6 +8,8 @@ let direct = 1;
 
 const router = useRouter();
 
+const directionFormTitle = ref('计算机系统');
+
 // 获取自己做题情况
 var myHeaders = new Headers();
 myHeaders.append("token", token);
@@ -24,7 +26,7 @@ var java_scores;
 var web_scores;
 var ml_scores;
 
-fetch("http://www.glimmer.org.cn:25000/problem", requestOptions)
+fetch("http://recruit.www.glimmer.org.cn:24999/problem", requestOptions)
    .then(response => response.json())
    .then(result => {
     console.log(result);
@@ -52,6 +54,8 @@ const tableRowClassName = ({
     return 'warning-row'; // 警告行
   } else if (row.score > 0) {
     return 'success-row'; // 成功行
+  } else if (row.score === -1) {
+    return 'not-submitted-row'; // 未提交行
   }
   return '';
 }
@@ -111,11 +115,38 @@ const filteredTableData = computed(() => {
   return tableData.value.filter(item => item.score !== -1);
 });
 
+const scoreFormatter = (row, column) => {
+  if (row.score === 0) {
+    return '审核中';
+  } else if (row.score === 1) {
+    return '请联系出题人';
+  } else {
+    return row.score;
+  }
+};
+
+
 const form = reactive({
   url: '',
   field: '',
   id: ''
 });
+
+// 表单验证规则
+const rules = {
+  url: [
+    { required: true, message: '请输入仓库地址', trigger: 'blur' },
+  ],
+  field: [
+    { required: true, message: '请选择方向', trigger: 'change' },
+  ],
+  id: [
+    { required: true, message: '请选择题号', trigger: 'change' },
+  ],
+};
+
+// 表单引用
+const uploadForm = ref(null);
 
 const activeIndex = ref('1')
 const handleSelect = (key: string, keyPath: string[]) => {
@@ -134,6 +165,14 @@ const selectSubmit = () => {
 
 // 函数   
 const onSubmit = async () => {
+  uploadForm.value.validate((valid) => {
+    if (!valid) {
+      // 表单验证失败，显示提示信息
+      ElMessage.error('请填写相关信息');
+      return false;
+    } 
+  });
+  // 表单验证通过，执行提交逻辑
   try {
     console.log('提交的数据:', form);
     const raw = JSON.stringify(form);
@@ -150,7 +189,7 @@ const onSubmit = async () => {
     };
 
     // 提交数据
-    const response = await fetch("http://www.glimmer.org.cn:25000/problem", requestOptions);
+    const response = await fetch("http://recruit.www.glimmer.org.cn:24999/problem", requestOptions);
 
     if (!response.ok) {
       throw new Error('Network response was not ok ' + response.statusText);
@@ -158,6 +197,7 @@ const onSubmit = async () => {
 
     const result = await response.json();
     console.log(result);
+    ElMessage({ type: 'success', message: '提交成功' });
 
     // 提交成功后更新分数
     await updateScoresFromServer();
@@ -178,7 +218,7 @@ const updateScoresFromServer = async () => {
       redirect: 'follow'
     };
 
-    const response = await fetch("http://www.glimmer.org.cn:25000/problem", requestOptions);
+    const response = await fetch("http://recruit.www.glimmer.org.cn:24999/problem", requestOptions);
     
     if (!response.ok) {
       throw new Error('Network response was not ok ' + response.statusText);
@@ -210,21 +250,25 @@ const logout = ()=>{
 
 const cs = ()=>{
   direct = 1;
+  directionFormTitle.value="计算机系统";
   updateScores();
 }
 
 const frontEnd = ()=>{
   direct = 2;
+  directionFormTitle.value="前端";
   updateScores();
 }
 
 const rearEnd = ()=>{
   direct = 3;
+  directionFormTitle.value="后端";
   updateScores();
 }
 
 const ml = ()=>{
   direct = 4;
+  directionFormTitle.value="机器学习";
   updateScores();
 }
 
@@ -258,7 +302,7 @@ const updateScores = () => {
 
 nextTick(() => {
   console.log('DOM updated');
-  fetch("http://www.glimmer.org.cn:25000/problem", requestOptions)
+  fetch("http://recruit.www.glimmer.org.cn:24999/problem", requestOptions)
    .then(response => response.json())
    .then(result => {
     console.log(result);
@@ -361,14 +405,14 @@ nextTick(() => {
                     :ellipsis="false"
                     style="height: 100%;border-bottom: 0"
                   >
-                    <el-menu-item index="1" style="margin-right: 0;" @click="selectDetail">已提交题目</el-menu-item>
+                    <el-menu-item index="1" style="margin-right: 0;" @click="selectDetail">{{directionFormTitle}}</el-menu-item>
                     <el-menu-item index="2" @click="selectSubmit">题目提交</el-menu-item>
                   </el-menu>
                 </div>
                 </div>
             </div>
           </div>
-          <!-- 排行榜 -->
+          <!-- 成绩单 -->
           <div style="width: 100%;height: 50vh;display: flex;justify-content: center;" v-if="contentActiveIndex === '1'">
             <el-scrollbar max-height="30vh" style="margin-top: 16px;">
               <el-table
@@ -378,7 +422,7 @@ nextTick(() => {
                 :row-class-name="tableRowClassName"
               >
                 <el-table-column prop="title" label="已提交题目" />
-                <el-table-column prop="score" label="分数" />
+                <el-table-column prop="score" label="分数" :formatter="scoreFormatter" />
               </el-table>
   
             </el-scrollbar>
@@ -387,41 +431,43 @@ nextTick(() => {
           <div style="width: 100%;display: flex;justify-content: center;margin-top: 16px;" v-else-if="contentActiveIndex === '2'">
             <el-card style="height: fit-content;">
               <div>
-                <strong>提交方式：</strong>
+                <strong>做题流程：</strong>
                 <br><br>
-                <el-text type="primary">Github仓库地址</el-text>
+                <el-text>使用 git 工具（教程见日常基础）</el-text>
                 <br>
-                <el-text type="primary">Gitee仓库地址</el-text>
-                <br>
-                <el-text type="primary">其他仓库地址</el-text>
+                <el-text>将作答 push 到自己的 github 或 gitee 仓库</el-text>
                 <br><br>
-                <el-text>仓库格式要求：</el-text><br>
-                <el-text>你可以选择一个仓库收纳你的题目</el-text><br>
-                <el-text>也可以一个仓库收纳多个题目</el-text><br>
-                <el-text>只要你用</el-text><br>
-                <el-text>glimmer-2024090801001-微光娘</el-text><br>
+                <el-text>选择方向和题号，将你的 git 远程仓库地址贴上去，提交</el-text><br><br>
+                <el-text>等待评分（非实时），期待在排行榜看到你~</el-text><br><br>
               </div>
               <div id="">
                 <el-text type="primary">有任何问题都可以找出题人询问😇</el-text>
               </div>
             </el-card>
             <el-card style="width: 25%;height:fit-content;margin-left: 16px;" >
-              <el-form :model="form" label-width="auto" id="upload" style="width: 100%;">
+              <el-form
+                :model="form"
+                :rules="rules"
+                label-width="auto"
+                id="upload"
+                style="width: 100%;"
+                ref="uploadForm"
+              >
                 <!-- URL 输入框 -->
                 <el-form-item label="URL" prop="url">
                   <el-input v-model="form.url" placeholder="请输入你的仓库地址"></el-input>
                 </el-form-item>
-    
+
                 <!-- 字段选择框 -->
                 <el-form-item label="方向" prop="field">
                   <el-select v-model="form.field" placeholder="请选择你的方向">
                     <el-option label="后端-Java" value="java"></el-option>
                     <el-option label="计算机系统" value="c"></el-option>
                     <el-option label="前端" value="web"></el-option>
-                    <el-option label="ML（机器学习）" value="ml"></el-option>
+                    <el-option label="ML（机器学习）（根据题目要求使用邮箱提交）" value="ml"></el-option>
                   </el-select>
                 </el-form-item>
-    
+
                 <!-- ID 选择框（1 到 12）-->
                 <el-form-item label="ID" prop="id">
                   <el-select v-model="form.id" placeholder="请选择你要提交的题号">
@@ -433,7 +479,7 @@ nextTick(() => {
                     ></el-option>
                   </el-select>
                 </el-form-item>
-    
+
                 <!-- 提交按钮 -->
                 <el-form-item>
                   <el-button type="primary" @click="onSubmit">提交</el-button>

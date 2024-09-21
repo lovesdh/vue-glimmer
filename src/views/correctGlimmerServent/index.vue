@@ -8,6 +8,12 @@
     <el-select v-model="selectedSubject" placeholder="请选择科目" style="margin-bottom: 20px;">
       <el-option v-for="subject in subjects" :key="subject" :label="subject" :value="subject"></el-option>
     </el-select>
+    <el-switch
+      v-model="showUngradedOnly"
+      active-text="只显示未评分学生"
+      inactive-text="显示所有学生"
+      style="margin-bottom: 20px;"
+    ></el-switch>
     <el-table :data="filteredData" border style="width: 100%">
       <el-table-column prop="studenid" label="学生ID" width="180"></el-table-column>
       <el-table-column prop="name" label="姓名" width="180"></el-table-column>
@@ -41,13 +47,14 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { ElTable, ElTableColumn, ElInput, ElSelect, ElOption, ElButton } from 'element-plus';
+import { ElTable, ElTableColumn, ElInput, ElSelect, ElOption, ElButton, ElSwitch } from 'element-plus';
 
 let token = localStorage.getItem('token');
 const data = ref(null);
 const subjects = ['c', 'java', 'web', 'ml'];
 const searchQuery = ref('');
 const selectedSubject = ref('');
+const showUngradedOnly = ref(false);
 
 var myHeaders = new Headers();
 myHeaders.append("token", token);
@@ -59,7 +66,7 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-fetch("http://www.glimmer.org.cn:25000/all", requestOptions)
+fetch("http://www.glimmer.org.cn:24999/all", requestOptions)
   .then(response => response.json())
   .then(result => {
     data.value = result.data;
@@ -68,9 +75,14 @@ fetch("http://www.glimmer.org.cn:25000/all", requestOptions)
   .catch(error => console.log('error', error));
 
 const filteredData = computed(() => {
-  if (!data.value) return [];
+  if (!data.value || !selectedSubject.value) return [];
   return data.value.filter(student => {
-    return student.studenid.includes(searchQuery.value) || student.name.includes(searchQuery.value);
+    const matchesSearch = student.studenid.includes(searchQuery.value) || student.name.includes(searchQuery.value);
+    if (showUngradedOnly.value) {
+      return matchesSearch && student[selectedSubject.value].some(score => score.score === 0 && score.url);
+    } else {
+      return matchesSearch;
+    }
   });
 });
 
@@ -89,7 +101,7 @@ const submitScore = (studentid, field, id, score) => {
     redirect: 'follow'
   };
 
-  fetch("http://www.glimmer.org.cn:25000/grade", requestOptions)
+  fetch("http://www.glimmer.org.cn:24999/grade", requestOptions)
     .then(response => response.text())
     .then(result => {
       console.log(result);

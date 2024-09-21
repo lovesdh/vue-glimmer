@@ -41,7 +41,7 @@ const checkInputs = () => {
 const dologin = async () => {
     if (checkInputs()) {
         try {
-            const response = await fetch("http://www.glimmer.org.cn:25000/login", {
+            const response = await fetch("http://www.glimmer.org.cn:24999/login", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: username.value, password: password.value })
@@ -65,9 +65,13 @@ const sendEmail = async () => {
         // 验证码等待
         startCountdown();
 
-        const response = await fetch(`http://www.glimmer.org.cn:25000/registercode?email=${email.value}`);
+        const response = await fetch(`http://www.glimmer.org.cn:24999/registercode?email=${email.value}`);
         const result = await response.json();
         console.log(result);
+        ElMessage({ type: 'warn', message: result.msg });
+        if (result.code === 400) {
+                ElMessage({ type: 'warn', message: result.data.message });
+        } 
         isDisabled.value = true;
         
     } catch (error) {
@@ -78,7 +82,7 @@ const sendEmail = async () => {
 const doregister = async () => {
     if (checkInputs()) {
         try {
-            const response = await fetch("http://www.glimmer.org.cn:25000/signup", {
+            const response = await fetch("http://www.glimmer.org.cn:24999/signup", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -95,7 +99,7 @@ const doregister = async () => {
                 ElMessage({ type: 'success', message: '注册成功' });
                 window.location.href = '/login';
             } else {
-                alert('验证码错误');
+                ElMessage({ type: 'warn', message: '注册失败' });
             }
         } catch (error) {
             console.error('error', error);
